@@ -1,103 +1,224 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>💖 For My Love</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💖 For My Love</title>
 
-  <style>
-    * { box-sizing: border-box; }
+<style>
+*{box-sizing:border-box}
 
-    body {
-      margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      text-align: center;
-    }
+body{
+  margin:0;
+  font-family:'Poppins',sans-serif;
+  background:linear-gradient(135deg,#ff9a9e,#fad0c4);
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  color:#fff;
+}
 
-    .container {
-      background: rgba(255,255,255,0.15);
-      padding: 25px;
-      border-radius: 20px;
-      width: 90%;
-      max-width: 420px;
-      animation: fadeIn 0.8s ease;
-    }
+.card{
+  width:90%;
+  max-width:420px;
+  background:rgba(255,255,255,0.2);
+  backdrop-filter:blur(10px);
+  border-radius:20px;
+  padding:25px;
+  text-align:center;
+  animation:fade .6s ease;
+}
 
-    button {
-      padding: 12px 20px;
-      margin: 10px;
-      border: none;
-      border-radius: 30px;
-      font-size: 16px;
-      cursor: pointer;
-    }
+.hidden{display:none}
 
-    .yes { background: #ff4d6d; color: #fff; }
-    .no { background: #fff; color: #ff4d6d; }
+h1,h2{margin:10px 0}
+p{margin:8px 0}
 
-    .hidden { display: none; }
+button{
+  border:none;
+  padding:12px 22px;
+  border-radius:30px;
+  font-size:16px;
+  cursor:pointer;
+  margin:10px;
+}
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.9); }
-      to { opacity: 1; transform: scale(1); }
-    }
-  </style>
+.yes{background:#ff5f7e;color:white}
+.no{background:#ffffff;color:#ff5f7e}
+
+input{
+  width:80%;
+  padding:12px;
+  border:none;
+  border-radius:20px;
+  text-align:center;
+  font-size:16px;
+}
+
+.error{color:#ffeb3b;font-size:14px}
+
+.gallery{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:6px;
+  margin-top:15px;
+}
+.gallery img{
+  width:100%;
+  border-radius:10px;
+}
+
+#typing{
+  font-size:16px;
+  margin-top:15px;
+  min-height:70px;
+}
+
+.audio-btn{
+  position:fixed;
+  bottom:15px;
+  right:15px;
+  background:#ff5f7e;
+  color:white;
+  border-radius:50%;
+  width:50px;
+  height:50px;
+  font-size:20px;
+}
+
+@keyframes fade{
+  from{opacity:0;transform:scale(.9)}
+  to{opacity:1;transform:scale(1)}
+}
+</style>
 </head>
 
 <body>
 
-  <!-- AUDIO -->
-  <audio id="bgMusic" loop>
-    <source src="lagu-kita.mp3" type="audio/mpeg">
-  </audio>
+<!-- AUDIO -->
+<audio id="bgMusic" loop>
+  <source src="lagu-kita.mp3" type="audio/mpeg">
+</audio>
+<button class="audio-btn" onclick="toggleMusic()">⏸️</button>
 
-  <!-- PAGE 1 -->
-  <div class="container" id="page1">
-    <h1>🎁 Do you want to see your gift?</h1>
-    <p>Aku punya kejutan kecil buat kamu 💌</p>
-    <button class="yes" onclick="yesClick()">YES 💖</button>
-    <button class="no" onclick="noClick()">NO 😝</button>
+<!-- PAGE START -->
+<div class="card" id="start">
+  <h1>🎁 Do you want to see your gift?</h1>
+  <p>Aku punya kejutan kecil buat kamu 💕</p>
+  <button class="yes" onclick="yesClick()">YES 💖</button>
+  <button class="no" onclick="noClick()">NO 😢</button>
+</div>
+
+<!-- PAGE SAD -->
+<div class="card hidden" id="sad">
+  <h1>😢 Yahhh…</h1>
+  <p>Coba klik YES dong 🥺</p>
+  <button class="yes" onclick="tryAgain()">TRY AGAIN 💞</button>
+</div>
+
+<!-- PAGE SECRET -->
+<div class="card hidden" id="secret">
+  <h2>🔐 Rahasia Kita</h2>
+  <p>Masukin tanggal jadian 💘</p>
+  <input type="password" id="secretInput" placeholder="DDMMYY">
+  <br><br>
+  <button class="yes" onclick="checkSecret()">BUKA 💖</button>
+  <p id="secretError" class="error hidden">Salah 😝 masa lupa sih</p>
+</div>
+
+<!-- PAGE LOVE -->
+<div class="card hidden" id="love">
+  <h1>💖 I Love You 💖</h1>
+  <p>Terima kasih sudah jadi bagian hidupku 🥰</p>
+
+  <h3 id="countdown"></h3>
+
+  <div id="typing"></div>
+
+  <div class="gallery">
+    <img src="foto1.jpeg">
+    <img src="foto2.jpeg">
+    <img src="foto3.jpeg">
+    <img src="foto4.jpeg">
+    <img src="foto5.jpeg">
+    <img src="foto6.jpeg">
+    <img src="foto7.jpeg">
+    <img src="foto8.jpeg">
+    <img src="foto9.jpeg">
+    <img src="foto10.jpeg">
+    <img src="foto11.jpeg">
   </div>
+</div>
 
-  <!-- PAGE 2 (NO) -->
-  <div class="container hidden" id="pageNo">
-    <h1>😢 Yahhh...</h1>
-    <p>Coba klik YES dong 🥺</p>
-    <button class="yes" onclick="tryAgain()">TRY AGAIN 💕</button>
-  </div>
+<script>
+const SECRET_CODE = "250825";
+const music = document.getElementById("bgMusic");
+let playing = true;
 
-  <!-- PAGE 3 (YES) -->
-  <div class="container hidden" id="pageYes">
-    <h1>💖 I Love You 💖</h1>
-    <p>Terima kasih sudah jadi bagian hidupku 🥰</p>
-  </div>
+function playMusic(){
+  music.volume = 0.8;
+  music.play();
+}
 
-  <script>
-    function yesClick() {
-      document.getElementById('page1').classList.add('hidden');
-      document.getElementById('pageYes').classList.remove('hidden');
+function toggleMusic(){
+  if(playing){
+    music.pause();
+  }else{
+    music.play();
+  }
+  playing = !playing;
+}
 
-      const music = document.getElementById('bgMusic');
-      music.volume = 0.8;
-      music.play();
-    }
+function yesClick(){
+  playMusic();
+  start.classList.add("hidden");
+  secret.classList.remove("hidden");
+}
 
-    function noClick() {
-      document.getElementById('page1').classList.add('hidden');
-      document.getElementById('pageNo').classList.remove('hidden');
-    }
+function noClick(){
+  start.classList.add("hidden");
+  sad.classList.remove("hidden");
+}
 
-    function tryAgain() {
-      document.getElementById('pageNo').classList.add('hidden');
-      document.getElementById('page1').classList.remove('hidden');
-    }
-  </script>
+function tryAgain(){
+  sad.classList.add("hidden");
+  start.classList.remove("hidden");
+}
+
+function checkSecret(){
+  if(secretInput.value === SECRET_CODE){
+    secret.classList.add("hidden");
+    love.classList.remove("hidden");
+    startTyping();
+    startCountdown();
+  }else{
+    secretError.classList.remove("hidden");
+  }
+}
+
+/* TYPING EFFECT */
+const text = "Aku mungkin bukan yang sempurna, tapi aku akan selalu memilih kamu setiap hari. Terima kasih sudah bertahan bersamaku 💖";
+let i = 0;
+function startTyping(){
+  if(i < text.length){
+    typing.innerHTML += text.charAt(i);
+    i++;
+    setTimeout(startTyping,50);
+  }
+}
+
+/* COUNTDOWN */
+function startCountdown(){
+  const startDate = new Date("2025-08-25");
+  setInterval(()=>{
+    const now = new Date();
+    const diff = startDate - now;
+    const days = Math.floor(diff/(1000*60*60*24));
+    countdown.innerHTML = "⏳ Menuju hari jadian: " + days + " hari";
+  },1000);
+}
+</script>
 
 </body>
 </html>
