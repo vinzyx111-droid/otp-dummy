@@ -3,266 +3,533 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Special Gift For You</title>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <title>Special Gift For You ❤️</title>
     
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
     <style>
         :root {
             --primary: #ff8fa3;
-            --secondary: #c9184a;
-            --bg-glass: rgba(255, 255, 255, 0.3);
-            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            --secondary: #ff4d6d;
+            --accent: #fff0f3;
+            --glass: rgba(255, 255, 255, 0.25);
+            --glass-border: rgba(255, 255, 255, 0.4);
+            --text-main: #590d22;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
 
         body {
             font-family: 'Poppins', sans-serif;
-            overflow: hidden;
+            background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fad0c4, #a18cd1, #fbc2eb);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab, #ffafbd);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
+            overflow: hidden;
+            color: var(--text-main);
+            cursor: none; /* Custom Cursor */
         }
 
+        /* --- ANIMATIONS --- */
         @keyframes gradientBG {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulseBtn {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 77, 109, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(255, 77, 109, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 77, 109, 0); }
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
 
+        /* --- CUSTOM CURSOR --- */
+        .cursor-trail {
+            position: fixed;
+            width: 10px; height: 10px;
+            background: var(--secondary);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            animation: fadeOut 1s linear forwards;
+        }
+        @keyframes fadeOut { to { opacity: 0; transform: scale(0); } }
+
+        /* --- CONTAINER STYLE (GLASSMORPHISM) --- */
         .container {
-            background: var(--bg-glass);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            padding: 30px;
             width: 90%;
-            max-width: 450px;
+            max-width: 500px; /* Mobile Friendly Width */
+            min-height: 600px;
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 2px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             text-align: center;
-            box-shadow: var(--shadow);
-            color: #fff;
             position: relative;
+            transition: all 0.5s ease;
         }
 
-        h1, h2 { font-family: 'Dancing Script', cursive; margin-bottom: 15px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
-        h1 { font-size: 2.2rem; }
-        p { margin-bottom: 20px; font-size: 0.9rem; }
+        /* --- TYPOGRAPHY --- */
+        h1, h2, h3 { font-family: 'Dancing Script', cursive; color: var(--secondary); text-shadow: 1px 1px 2px rgba(255,255,255,0.8); }
+        h1 { font-size: 2.8rem; margin-bottom: 10px; }
+        h2 { font-size: 2.2rem; margin-bottom: 15px; }
+        p { font-size: 0.95rem; line-height: 1.6; color: #6d1b32; margin-bottom: 15px; }
 
-        .page { display: none; animation: fadeIn 0.8s ease; }
-        .page.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        /* --- PAGES --- */
+        .page { display: none; width: 100%; height: 100%; animation: fadeIn 0.8s ease; flex-direction: column; justify-content: center; align-items: center; }
+        .page.active { display: flex; }
 
+        /* --- INPUTS & BUTTONS --- */
         input {
-            padding: 12px; border-radius: 50px; border: none; outline: none; text-align: center;
-            width: 80%; margin-bottom: 20px; background: rgba(255,255,255,0.8); color: #333;
+            width: 70%; padding: 12px; border-radius: 50px; border: none; outline: none;
+            background: rgba(255,255,255,0.7); text-align: center; font-size: 1.1rem;
+            margin-bottom: 20px; transition: 0.3s;
         }
-
+        input:focus { width: 80%; background: #fff; box-shadow: 0 4px 15px rgba(255, 77, 109, 0.2); }
+        
         .btn {
-            background: var(--secondary); color: white; padding: 10px 25px; border-radius: 50px;
-            border: none; cursor: pointer; font-weight: 600; transition: transform 0.2s;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            padding: 12px 35px; border-radius: 50px; border: none; cursor: pointer;
+            background: var(--secondary); color: white; font-weight: 600; font-size: 1rem;
+            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4); transition: transform 0.2s, background 0.2s;
+            margin: 5px;
         }
-        .btn:hover { transform: scale(1.05); background: #a00f38; }
+        .btn:hover { background: #d90429; transform: translateY(-2px); }
+        .btn.pulse { animation: pulseBtn 2s infinite; }
 
-        /* PUZZLE STYLE */
-        #puzzle-board {
-            width: 300px; height: 300px; margin: 0 auto 20px auto;
-            display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr);
-            gap: 2px; background: rgba(255,255,255,0.2); padding: 5px; border-radius: 10px;
+        /* --- PAGE 3: HEART PUZZLE --- */
+        .puzzle-wrapper {
+            position: relative;
+            width: 300px; height: 300px;
+            margin: 0 auto;
+        }
+        /* Masking bentuk hati untuk container puzzle */
+        .puzzle-board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            width: 100%; height: 100%;
+            gap: 2px;
+            /* Heart Mask using CSS Radial Gradients (Cross-browser compatible approach) */
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E");
+            mask-repeat: no-repeat;
+            mask-position: center;
+            mask-size: contain;
+            -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E");
+            -webkit-mask-repeat: no-repeat;
+            -webkit-mask-position: center;
+            -webkit-mask-size: contain;
         }
         .puzzle-piece {
-            background-image: url('foto1.jpeg'); /* FOTO PUZZLE */
-            background-size: 300px 300px; cursor: grab; border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: transform 0.2s;
+            background-image: url('foto1.jpeg'); /* FOTO 1 */
+            background-size: 300px 300px;
+            cursor: grab;
+            transition: transform 0.2s;
+            background-color: #fff;
         }
-        .puzzle-piece.selected { border: 2px solid #fff; transform: scale(0.95); opacity: 0.8; }
+        .puzzle-piece.selected { opacity: 0.6; transform: scale(0.9); border: 2px solid var(--secondary); }
 
-        /* GALLERY STYLE */
-        .gallery { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 10px; padding-bottom: 10px; scrollbar-width: none; }
-        .gallery::-webkit-scrollbar { display: none; }
-        .photo-card { flex: 0 0 100%; scroll-snap-align: center; border-radius: 15px; overflow: hidden; }
-        .photo-card img { width: 100%; height: 300px; object-fit: cover; }
-
-        .buttons-container { display: flex; justify-content: center; gap: 15px; margin-top: 20px; position: relative; height: 50px; }
+        /* --- PAGE 4: BOOK STORY --- */
+        .book {
+            position: relative; width: 320px; height: 220px;
+            perspective: 1000px; margin-bottom: 20px;
+        }
+        .book-content {
+            width: 100%; height: 100%;
+            position: relative; transform-style: preserve-3d;
+            transition: transform 1s; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            display: flex;
+        }
+        .book-page {
+            width: 50%; height: 100%; background: #fffaf0;
+            padding: 10px; font-size: 0.7rem; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; border: 1px solid #e0e0e0;
+        }
+        .page-left { border-radius: 5px 0 0 5px; background: #fff; }
+        .page-right { border-radius: 0 5px 5px 0; text-align: left; align-items: flex-start; overflow-y: auto; }
+        .polaroid-small {
+            width: 90%; padding: 5px; background: white; box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+            transform: rotate(-5deg); margin-bottom: 5px;
+        }
+        .polaroid-small img { width: 100%; height: auto; display: block; }
         
-        /* TIMER STYLE */
-        #love-timer {
-            font-size: 1rem; margin: 20px auto; background: rgba(255,255,255,0.2);
-            padding: 15px; border-radius: 15px; width: 100%;
+        /* --- PAGE 5: MAP --- */
+        .map-container {
+            display: flex; justify-content: space-between; align-items: center;
+            width: 100%; padding: 20px 0; position: relative;
         }
+        .location-dot { font-size: 2rem; color: var(--secondary); animation: float 3s infinite ease-in-out; }
+        .map-line {
+            flex-grow: 1; height: 2px; background: repeating-linear-gradient(90deg, var(--secondary) 0, var(--secondary) 10px, transparent 10px, transparent 20px);
+            position: relative; margin: 0 15px;
+        }
+        .plane-icon {
+            position: absolute; top: -15px; left: 0; font-size: 1.5rem; color: var(--text-main);
+            animation: movePlane 4s linear infinite alternate;
+        }
+        @keyframes movePlane { 0% { left: 0; transform: rotateY(0); } 100% { left: 90%; transform: rotateY(0); } }
+
+        /* --- PAGE 6: GALLERY --- */
+        .gallery-container {
+            display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 15px;
+            width: 100%; padding-bottom: 20px; -webkit-overflow-scrolling: touch;
+        }
+        .gallery-container::-webkit-scrollbar { height: 5px; }
+        .gallery-container::-webkit-scrollbar-thumb { background: var(--secondary); border-radius: 10px; }
+        .gallery-card {
+            flex: 0 0 80%; scroll-snap-align: center;
+            background: white; padding: 10px; border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1); transform: rotate(0deg); transition: 0.3s;
+        }
+        .gallery-card:nth-child(even) { transform: rotate(2deg); }
+        .gallery-card:nth-child(odd) { transform: rotate(-2deg); }
+        .gallery-card img { width: 100%; height: 250px; object-fit: cover; border-radius: 5px; }
+
+        /* --- PAGE 7: PLAYLIST --- */
+        .playlist { display: flex; gap: 10px; width: 100%; overflow-x: auto; padding-bottom: 10px; }
+        .song-card {
+            min-width: 120px; background: rgba(255,255,255,0.4); padding: 10px;
+            border-radius: 15px; text-align: center; border: 1px solid rgba(255,255,255,0.5);
+        }
+        .song-icon { font-size: 1.5rem; color: var(--secondary); margin-bottom: 5px; animation: pulseBtn 3s infinite; }
+        .song-info h4 { font-size: 0.8rem; margin: 0; }
+        .song-info span { font-size: 0.6rem; opacity: 0.8; }
+
+        /* --- PAGE 9: TIMER --- */
+        .timer-box {
+            background: rgba(255,255,255,0.3); padding: 15px; border-radius: 15px;
+            margin: 20px 0; border: 1px solid rgba(255,255,255,0.5);
+        }
+        #timer { font-size: 1.1rem; font-weight: bold; color: var(--secondary); margin-top: 5px; }
+
     </style>
 </head>
 <body>
 
-    <audio id="musik" loop><source src="lagu-lagi.mp3" type="audio/mpeg"></audio>
+    <audio id="bgm" loop>
+        <source src="lagu-lagi.mp3" type="audio/mpeg">
+    </audio>
 
     <div class="container">
+        
         <div id="page1" class="page active">
-            <h1>Hi, This is a gift for you ❤️</h1>
-            <p>Ada sesuatu spesial yang ingin aku tunjukkan.</p>
-            <button class="btn" onclick="nextPage('page2')">Buka Kado 🎁</button>
+            <h1>Hi, This is a Special Gift for You ❤️</h1>
+            <p>Ada sesuatu yang ingin aku tunjukkan...</p>
+            <button class="btn pulse" onclick="nextPage(2)">Start Journey ✨</button>
         </div>
 
         <div id="page2" class="page">
-            <h2>Masukkan Kode Rahasia</h2>
-            <p>Clue: 250825</p>
-            <input type="password" id="passcode" placeholder="Kode...">
-            <br>
-            <button class="btn" onclick="checkCode()">Unlock 🔓</button>
+            <h2>Enter Our Date</h2>
+            <p>Clue: Kapan kita jadian? (DDMMYY)</p>
+            <input type="password" id="passInput" placeholder="250825">
+            <button class="btn" onclick="checkPass()">Unlock ❤️</button>
         </div>
 
         <div id="page3" class="page">
-            <h2>Puzzle Time! 🧩</h2>
-            <p>Susun foto ini ya! <small>(Drag atau Klik 2 kotak untuk tukar)</small></p>
-            <div id="puzzle-board"></div>
-            <p id="puzzle-status" style="margin-top:10px; font-weight:bold; color:#ffeeb0;"></p>
+            <h2>Complete My Heart 🧩</h2>
+            <div class="puzzle-wrapper">
+                <div class="puzzle-board" id="puzzleBoard"></div>
+            </div>
+            <p style="margin-top: 15px; font-size: 0.8rem;">(Tap 2 kotak untuk menukar posisi)</p>
         </div>
 
         <div id="page4" class="page">
-            <h2>For You, My Dear</h2>
-            <div id="typing-box" style="text-align: left; min-height: 120px; font-size: 0.9rem; margin-bottom:15px;"></div>
-            <button class="btn" onclick="nextPage('page5')">Lihat Kenangan 📸</button>
+            <h2>Our Story</h2>
+            <div class="book">
+                <div class="book-content">
+                    <div class="book-page page-left">
+                        <div class="polaroid-small">
+                            <img src="foto2.jpeg" alt="Us">
+                        </div>
+                        <p style="margin-top:5px; font-family:'Dancing Script'">The Beginning</p>
+                    </div>
+                    <div class="book-page page-right">
+                        <div id="typingText" style="font-size: 0.75rem;"></div>
+                    </div>
+                </div>
+            </div>
+            <button class="btn" onclick="nextPage(5)">Lanjut Bacanya ➡️</button>
         </div>
 
         <div id="page5" class="page">
-            <h2>Our Memories</h2>
-            <div class="gallery">
-                <div class="photo-card"><img src="foto1.jpeg" alt="1"></div>
-                <div class="photo-card"><img src="foto2.jpeg" alt="2"></div>
-                <div class="photo-card"><img src="foto3.jpeg" alt="3"></div>
-                <div class="photo-card"><img src="foto4.jpeg" alt="4"></div>
-                <div class="photo-card"><img src="foto5.jpeg" alt="5"></div>
-                <div class="photo-card"><img src="foto6.jpeg" alt="6"></div>
-                <div class="photo-card"><img src="foto7.jpeg" alt="7"></div>
-                <div class="photo-card"><img src="foto8.jpeg" alt="8"></div>
-                <div class="photo-card"><img src="foto9.jpeg" alt="9"></div>
-                <div class="photo-card"><img src="foto10.jpeg" alt="10"></div>
-                <div class="photo-card"><img src="foto11.jpeg" alt="11"></div>
+            <h2>Connected Heart</h2>
+            <div class="map-container">
+                <div style="text-align: center;">
+                    <i class="fas fa-map-marker-alt location-dot"></i>
+                    <p style="font-size: 0.8rem; margin:0;">Aku</p>
+                </div>
+                <div class="map-line">
+                    <i class="fas fa-plane plane-icon"></i>
+                </div>
+                <div style="text-align: center;">
+                    <i class="fas fa-map-marker-alt location-dot" style="animation-delay: 1.5s;"></i>
+                    <p style="font-size: 0.8rem; margin:0;">Kamu</p>
+                </div>
             </div>
-            <br><button class="btn" onclick="nextPage('page6')">Next ❤️</button>
+            <p style="font-style: italic;">"Jarak hanya angka, hati kita selalu dekat."</p>
+            <button class="btn" onclick="nextPage(6)">Lihat Kenangan 📸</button>
         </div>
 
         <div id="page6" class="page">
-            <h2>Will You Stay With Me?</h2>
-            <div class="buttons-container">
-                <button class="btn" onclick="terimaCinta()">YES, I WILL! 💖</button>
-                <button class="btn" id="btnNo" onmouseover="pindahTombol()" style="position: absolute;">NO ☹️</button>
+            <h2>Our Memories</h2>
+            <div class="gallery-container">
+                <div class="gallery-card"><img src="foto3.jpeg"></div>
+                <div class="gallery-card"><img src="foto4.jpeg"></div>
+                <div class="gallery-card"><img src="foto5.jpeg"></div>
+                <div class="gallery-card"><img src="foto6.jpeg"></div>
+                <div class="gallery-card"><img src="foto7.jpeg"></div>
+                <div class="gallery-card"><img src="foto8.jpeg"></div>
+                <div class="gallery-card"><img src="foto9.jpeg"></div>
+                <div class="gallery-card"><img src="foto10.jpeg"></div>
+                <div class="gallery-card"><img src="foto11.jpeg"></div>
             </div>
+            <button class="btn" onclick="nextPage(7)" style="margin-top: 20px;">Next 🎵</button>
         </div>
 
         <div id="page7" class="page">
-            <h1>Yeay! Makasih Sayang! 🎉</h1>
-            <p>Aku beruntung banget punya kamu.</p>
+            <h2>Lagu Favorit Kita 🎶</h2>
+            <div class="playlist">
+                <div class="song-card">
+                    <i class="fas fa-heart song-icon"></i>
+                    <div class="song-info">
+                        <h4>Sempurna</h4>
+                        <span>Andra & Backbone</span>
+                    </div>
+                </div>
+                <div class="song-card">
+                    <i class="fas fa-music song-icon" style="color:#a18cd1"></i>
+                    <div class="song-info">
+                        <h4>Bukti</h4>
+                        <span>Virgoun</span>
+                    </div>
+                </div>
+                <div class="song-card">
+                    <i class="fas fa-compact-disc song-icon" style="color:#ff9a9e"></i>
+                    <div class="song-info">
+                        <h4>Cinta Terbaik</h4>
+                        <span>Cassandra</span>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <button class="btn" onclick="nextPage(8)">Satu Pertanyaan... ❓</button>
+        </div>
+
+        <div id="page8" class="page">
+            <h2>Will You Stay With Me?</h2>
+            <p>Temani aku terus ya, jangan kemana-mana...</p>
+            <div style="position: relative; height: 100px; width: 100%; display: flex; justify-content: center; align-items: center; gap: 20px;">
+                <button class="btn" onclick="acceptLove()">YES, I WILL! 💖</button>
+                <button class="btn" id="btnNo" style="background: #555;">NO 😢</button>
+            </div>
+        </div>
+
+        <div id="page9" class="page">
+            <h1>Yeay! I Love You! 🎉</h1>
+            <p>Makasih udah milih aku. Aku janji bakal jaga kamu terus.</p>
             
-            <div id="love-timer">
-                Kita sudah bersama selama:<br>
-                <b id="timer-display" style="font-size: 1.2rem;">Hitung waktu...</b>
-                <br>❤️
+            <div class="timer-box">
+                <span>Kita sudah bersama selama:</span>
+                <div id="timer">Loading...</div>
             </div>
 
-            <button class="btn" onclick="pelukAku()">Peluk Aku 🤗</button>
+            <button class="btn" onclick="finalHug()">Peluk Aku 🤗</button>
         </div>
+
     </div>
 
     <script>
-        const secretCode = "250825";
-        const textToType = "Hai kamu... Makasih ya udah jadi bagian terbaik dalam hidupku. Semoga kita bisa terus sama-sama ya. Love you! ❤️";
+        // --- CONFIG ---
+        const PASS = "250825";
+        const START_DATE = new Date("2025-08-25"); // Ganti tanggal di sini jika perlu
+        const LETTER_TEXT = "Hai kamu... Makasih ya udah jadi bagian terbaik dalam hidupku. Aku cuma mau bilang kalau aku beruntung banget punya kamu. Semoga kita bisa terus sama-sama ya. I love you to the moon and back! ❤️";
         
-        // --- SET TANGGAL JADIAN DISINI (Format: YYYY-MM-DD) ---
-        // Saya set ke 25 Agustus 2025 sesuai kode kamu "250825"
-        const startDate = new Date("2025-08-25"); 
-        
-        let audio = document.getElementById("musik");
-        const puzzleBoard = document.getElementById('puzzle-board');
-        let pieces = [], selectedPiece = null;
+        let audio = document.getElementById('bgm');
+        let currentPage = 1;
 
-        function nextPage(id) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            if(id === 'page3') initPuzzle();
-            if(id === 'page4') typeWriter();
-            if(id === 'page7') startTimer(); // Mulai timer di halaman akhir
+        // --- NAVIGATION ---
+        function nextPage(pageId) {
+            document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+            document.getElementById(`page${pageId}`).classList.add('active');
+            
+            // Trigger Khusus per Halaman
+            if(pageId === 3) initPuzzle();
+            if(pageId === 4) startTyping();
+            if(pageId === 8) initNoButton();
+            if(pageId === 9) startTimer();
         }
 
-        function checkCode() {
-            if(document.getElementById('passcode').value === secretCode) {
-                audio.play(); nextPage('page3');
-            } else { alert("Kode Salah!"); }
+        // --- PAGE 2: SECURITY ---
+        function checkPass() {
+            const val = document.getElementById('passInput').value;
+            if(val === PASS) {
+                audio.play().catch(e => console.log("Audio perlu interaksi user"));
+                alert("Welcome, My Love! ❤️");
+                nextPage(3);
+            } else {
+                alert("Salah tanggal ih! 😝");
+                document.getElementById('passInput').value = "";
+            }
         }
 
-        // --- PUZZLE LOGIC ---
+        // --- PAGE 3: HEART PUZZLE LOGIC ---
         function initPuzzle() {
-            puzzleBoard.innerHTML = ""; pieces = [];
+            const board = document.getElementById('puzzleBoard');
+            board.innerHTML = '';
             let indices = [0, 1, 2, 3, 4, 5, 6, 7, 8].sort(() => Math.random() - 0.5);
-            indices.forEach((index) => {
-                const piece = document.createElement('div');
-                piece.classList.add('puzzle-piece');
-                piece.draggable = true;
-                let row = Math.floor(index / 3), col = index % 3;
-                piece.style.backgroundPosition = `${col * 50}% ${row * 50}%`;
-                piece.dataset.id = index;
-                piece.addEventListener('dragstart', dragStart);
-                piece.addEventListener('dragover', e => e.preventDefault());
-                piece.addEventListener('drop', dragDrop);
-                piece.addEventListener('click', () => clickSwap(piece));
-                puzzleBoard.appendChild(piece); pieces.push(piece);
+            
+            let selectedPiece = null;
+
+            indices.forEach(i => {
+                const div = document.createElement('div');
+                div.className = 'puzzle-piece';
+                // Grid 3x3 Logic for Background Position
+                let row = Math.floor(i / 3);
+                let col = i % 3;
+                div.style.backgroundPosition = `${col * 50}% ${row * 50}%`;
+                div.dataset.id = i;
+
+                // Click to Swap (Mobile Friendly)
+                div.onclick = function() {
+                    if(!selectedPiece) {
+                        selectedPiece = this;
+                        this.classList.add('selected');
+                    } else {
+                        // Swap Visual
+                        let tempBg = this.style.backgroundPosition;
+                        this.style.backgroundPosition = selectedPiece.style.backgroundPosition;
+                        selectedPiece.style.backgroundPosition = tempBg;
+
+                        // Swap Data
+                        let tempId = this.dataset.id;
+                        this.dataset.id = selectedPiece.dataset.id;
+                        selectedPiece.dataset.id = tempId;
+
+                        selectedPiece.classList.remove('selected');
+                        selectedPiece = null;
+
+                        checkWin();
+                    }
+                };
+                board.appendChild(div);
             });
         }
-        let dragSrcEl = null;
-        function dragStart(e) { dragSrcEl = this; }
-        function dragDrop(e) { if(dragSrcEl !== this) swapPieces(dragSrcEl, this); }
-        function clickSwap(p) {
-            if(!selectedPiece) { selectedPiece = p; p.classList.add('selected'); }
-            else { swapPieces(selectedPiece, p); selectedPiece.classList.remove('selected'); selectedPiece = null; }
-        }
-        function swapPieces(el1, el2) {
-            let tempBg = el1.style.backgroundPosition, tempId = el1.dataset.id;
-            el1.style.backgroundPosition = el2.style.backgroundPosition; el1.dataset.id = el2.dataset.id;
-            el2.style.backgroundPosition = tempBg; el2.dataset.id = tempId;
-            checkWin();
-        }
+
         function checkWin() {
-            if(Array.from(puzzleBoard.children).every((p, i) => p.dataset.id == i)) {
-                document.getElementById('puzzle-status').innerText = "Yeay! Sempurna! 🎉";
-                triggerConfetti(); setTimeout(() => { alert("Puzzle Selesai! ❤️"); nextPage('page4'); }, 1500);
+            const pieces = document.querySelectorAll('.puzzle-piece');
+            let isWin = true;
+            pieces.forEach((p, index) => {
+                if(parseInt(p.dataset.id) !== index) isWin = false;
+            });
+
+            if(isWin) {
+                confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+                setTimeout(() => {
+                    alert("Yeay! Hati kamu utuh kembali! ❤️");
+                    nextPage(4);
+                }, 1000);
             }
         }
 
-        // --- TYPING & BUTTONS ---
-        let i = 0;
-        function typeWriter() {
-            const target = document.getElementById("typing-box");
-            if(target.innerHTML === "") {
-                function type() { if(i < textToType.length) { target.innerHTML += textToType.charAt(i); i++; setTimeout(type, 50); } }
-                type();
+        // --- PAGE 4: TYPING ANIMATION ---
+        function startTyping() {
+            const target = document.getElementById('typingText');
+            if(target.innerHTML !== "") return;
+            let i = 0;
+            function type() {
+                if(i < LETTER_TEXT.length) {
+                    target.innerHTML += LETTER_TEXT.charAt(i);
+                    i++;
+                    setTimeout(type, 50);
+                }
             }
+            type();
         }
-        function pindahTombol() {
-            const btn = document.getElementById("btnNo");
-            btn.style.position = "fixed"; btn.style.left = Math.random()*(window.innerWidth-100)+"px"; btn.style.top = Math.random()*(window.innerHeight-100)+"px";
-        }
-        function terimaCinta() { triggerConfetti(); triggerConfetti(); setTimeout(() => nextPage('page7'), 1000); }
-        function pelukAku() { alert("🤗 Peluk Eratt!! 🤗"); location.reload(); }
-        function triggerConfetti() { confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#ff8fa3', '#c9184a'] }); }
 
-        // --- TIMER FUNCTION ---
+        // --- PAGE 8: NO BUTTON LOGIC ---
+        function initNoButton() {
+            const btnNo = document.getElementById('btnNo');
+            btnNo.addEventListener('mouseover', moveButton);
+            btnNo.addEventListener('touchstart', moveButton); // For mobile
+        }
+
+        function moveButton(e) {
+            const btn = e.target;
+            const x = Math.random() * (window.innerWidth - 150);
+            const y = Math.random() * (window.innerHeight - 150);
+            btn.style.position = 'fixed';
+            btn.style.left = `${x}px`;
+            btn.style.top = `${y}px`;
+        }
+
+        function acceptLove() {
+            confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } });
+            nextPage(9);
+        }
+
+        // --- PAGE 9: TIMER ---
         function startTimer() {
             setInterval(() => {
                 const now = new Date();
-                const diff = now - startDate;
-                const d = Math.floor(diff / (1000*60*60*24));
-                const h = Math.floor((diff / (1000*60*60)) % 24);
-                const m = Math.floor((diff / (1000*60)) % 60);
+                const diff = now - START_DATE; // Logic: Waktu SEJAK tanggal jadian
+                
+                // Jika tanggal jadian masa depan, ubah jadi hitung mundur
+                // const diff = START_DATE - now; 
+
+                const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                const m = Math.floor((diff / (1000 * 60)) % 60);
                 const s = Math.floor((diff / 1000) % 60);
-                document.getElementById("timer-display").innerText = `${d} Hari, ${h} Jam, ${m} Menit, ${s} Detik`;
+
+                document.getElementById('timer').innerText = 
+                    `${d} Hari, ${h} Jam, ${m} Menit, ${s} Detik`;
             }, 1000);
         }
+
+        function finalHug() {
+            alert("🤗 Peluk Erat dari Jauh! 🤗");
+            // Fade out audio
+            let vol = 1;
+            const fade = setInterval(() => {
+                if(vol > 0) {
+                    vol -= 0.1;
+                    audio.volume = vol < 0 ? 0 : vol;
+                } else {
+                    clearInterval(fade);
+                    location.reload();
+                }
+            }, 200);
+        }
+
+        // --- CUSTOM CURSOR TRAIL ---
+        document.addEventListener('mousemove', (e) => {
+            const trail = document.createElement('div');
+            trail.className = 'cursor-trail';
+            trail.style.left = `${e.pageX}px`;
+            trail.style.top = `${e.pageY}px`;
+            trail.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 75%)`;
+            document.body.appendChild(trail);
+            setTimeout(() => trail.remove(), 1000);
+        });
+
     </script>
 </body>
 </html>
