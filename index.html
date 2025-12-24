@@ -106,10 +106,36 @@ input{
   from{transform:translateY(-10px)}
   to{transform:translateY(110vh)}
 }
+/* ===== PATCH: BACKGROUND GERAK (LOCK) ===== */
+.bg-animated{
+  position:fixed;
+  inset:0;
+  background:
+    linear-gradient(
+      120deg,
+      #ffb6c1,
+      #ffc0cb,
+      #ffdde1,
+      #ffe6ee
+    );
+  background-size:400% 400%;
+  animation:bgMoveFix 20s ease infinite;
+  z-index:-5;
+  pointer-events:none;
+}
+
+@keyframes bgMoveFix{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
 </style>
 </head>
 
 <body>
+<div class="bg-animated"></div>
+
 <div class="parallax"></div>
 
 <audio id="music" src="lagu-lagi.mp3" loop></audio>
@@ -228,3 +254,4 @@ function fadeOut(){
 </script>
 </body>
 </html>
+
