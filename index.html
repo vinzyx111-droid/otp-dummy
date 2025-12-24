@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>For My Love 💖</title>
 
-<!-- FONT -->
 <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
 
 <style>
@@ -13,72 +12,75 @@
 body{
   margin:0;
   font-family:'Patrick Hand',cursive;
-  background:linear-gradient(135deg,#ffe6ee,#ffd1dc);
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  overflow-x:hidden;
+}
+
+/* 🌸 PARALLAX */
+.parallax{
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(circle at 20% 30%, #ffd6e8, transparent 40%),
+    radial-gradient(circle at 80% 70%, #ffc1d9, transparent 40%),
+    linear-gradient(135deg,#ffe6ee,#ffd1dc);
+  animation:moveBg 20s linear infinite;
+  z-index:-2;
+}
+@keyframes moveBg{
+  from{background-position:0 0}
+  to{background-position:400px 400px}
 }
 
 .hidden{display:none!important}
 
-.center{
+/* CARD */
+.page{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+.card{
   background:#fff;
-  width:90%;
   max-width:420px;
-  padding:24px;
-  border-radius:22px;
+  width:100%;
+  padding:26px;
+  border-radius:26px;
   box-shadow:0 20px 40px rgba(0,0,0,.15);
   text-align:center;
   animation:fade .6s ease;
 }
+@keyframes fade{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1}
+}
 
-h1{margin:10px 0;font-size:28px}
+h1{font-size:30px;margin:10px 0}
 p{color:#555}
 
 button{
   border:none;
-  padding:14px 22px;
+  padding:14px 24px;
   border-radius:999px;
   font-size:16px;
   cursor:pointer;
   margin:8px;
 }
-
 .primary{background:#ff7fa8;color:#fff}
 .outline{background:#fff;border:2px solid #ff7fa8;color:#ff7fa8}
 
 input{
   width:100%;
   padding:14px;
-  border-radius:12px;
+  border-radius:14px;
   border:1px solid #ddd;
   font-size:16px;
-  margin:10px 0;
+  margin:12px 0;
   text-align:center;
 }
 
-/* PUZZLE */
-.puzzle{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:4px;
-  margin-top:14px;
-}
-.tile{
-  aspect-ratio:1/1;
-  background-size:300% 300%;
-  border-radius:8px;
-  cursor:pointer;
-}
-
-/* GALERI */
-.gallery img{
-  width:100%;
-  border-radius:18px;
-}
-
-/* AUDIO */
+/* 🎵 AUDIO */
 #audioBtn{
   position:fixed;
   right:18px;
@@ -89,118 +91,279 @@ input{
   background:#ff7fa8;
   color:#fff;
   font-size:24px;
+  z-index:999;
 }
 
-@keyframes fade{
-  from{opacity:0;transform:translateY(20px)}
-  to{opacity:1;transform:none}
+/* 🧩 PUZZLE */
+.puzzle{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:6px;
+}
+.piece{
+  aspect-ratio:1/1;
+  background-image:url('foto1.jpeg');
+  background-size:300% 300%;
+  border-radius:12px;
+  cursor:grab;
+}
+
+/* 💌 LETTER */
+.letter{
+  min-height:120px;
+  white-space:pre-wrap;
+  font-size:18px;
+  line-height:1.6;
+}
+
+/* 📸 GALERI */
+.gallery img{
+  width:100%;
+  border-radius:22px;
+  transition:transform .45s ease, opacity .45s ease;
+}
+
+/* 🎉 CONFETTI */
+#confetti{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:999;
+}
+#confetti span{
+  position:absolute;
+  width:10px;
+  height:14px;
+  background:var(--c);
+  animation:fall linear forwards;
+}
+@keyframes fall{
+  to{transform:translateY(110vh) rotate(360deg)}
+}
+
+/* 💍 POPUP */
+.popup{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.45);
+  backdrop-filter:blur(4px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+}
+.popup-box{
+  background:#fff;
+  padding:30px;
+  border-radius:26px;
+  text-align:center;
+  max-width:320px;
+  width:90%;
+  animation:pop .5s ease;
+}
+@keyframes pop{
+  from{transform:scale(.7);opacity:0}
+  to{transform:scale(1);opacity:1}
 }
 </style>
 </head>
 
 <body>
 
-<!-- AUDIO -->
+<div class="parallax"></div>
+<div id="confetti"></div>
+
 <audio id="music" loop>
   <source src="lagu-kita.mp3" type="audio/mpeg">
 </audio>
 <button id="audioBtn" onclick="toggleMusic()">🎵</button>
 
 <!-- PAGE 1 -->
-<div class="center" id="start">
-  <h1>Hello My Love 💖</h1>
-  <p>Do you want to see your gift?</p>
-  <button class="primary" onclick="go('code')">YES PLEASE</button>
-  <button class="outline" onclick="alert('Yahh 😭 coba lagi dong')">NO THANKS</button>
-</div>
-
-<!-- PAGE 2 CODE -->
-<div class="center hidden" id="code">
-  <h1>🔐 Secret Code</h1>
-  <p>Clue 6 angka</p>
-  <input id="codeInput" placeholder="Tanggal / Bulan / Tahun">
-  <button class="primary" onclick="checkCode()">Masuk 💗</button>
-</div>
-
-<!-- PAGE 3 PUZZLE -->
-<div class="center hidden" id="puzzle">
-  <h1>🧩 Puzzle Time</h1>
-  <p>Susun fotonya dulu ya 😘</p>
-  <div class="puzzle" id="puzzleGrid"></div>
-</div>
-
-<!-- PAGE 4 GALERI -->
-<div class="center hidden" id="gallery">
-  <h1>I Love You 💖</h1>
-  <p id="countdown"></p>
-  <div class="gallery">
-    <img id="galleryImg" src="foto1.jpeg">
+<div class="page" id="start">
+  <div class="card">
+    <h1>Hello My Love 💖</h1>
+    <p>Do you want to see your gift?</p>
+    <button class="primary" onclick="go('code')">YES PLEASE</button>
+    <button class="outline" onclick="alert('Yahhh 😭')">NO THANKS</button>
   </div>
-  <p>Geser → untuk lihat foto selanjutnya</p>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page hidden" id="code">
+  <div class="card">
+    <h1>🔐 Secret Code</h1>
+    <p>Clue 6 angka</p>
+    <input id="codeInput" placeholder="tanggal/bulan/tahun">
+    <button class="primary" onclick="checkCode()">Masuk 💗</button>
+  </div>
+</div>
+
+<!-- PAGE 3 -->
+<div class="page hidden" id="puzzlePage">
+  <div class="card">
+    <h1>🧩 Puzzle Time</h1>
+    <p>Drag potongan fotonya ya 😘</p>
+    <div class="puzzle" id="puzzle"></div>
+  </div>
+</div>
+
+<!-- PAGE 4 LETTER -->
+<div class="page hidden" id="letterPage">
+  <div class="card">
+    <h1>💌 For You</h1>
+    <div class="letter" id="letterText"></div>
+    <button class="primary" onclick="go('galleryPage')">Lihat Kenangan 💞</button>
+  </div>
+</div>
+
+<!-- PAGE 5 GALERI -->
+<div class="page hidden" id="galleryPage">
+  <div class="card">
+    <h1>I Love You 💖</h1>
+    <p id="countdown"></p>
+    <div class="gallery">
+      <img id="galleryImg" src="foto1.jpeg">
+    </div>
+    <p>Geser fotonya 💕</p>
+    <button class="primary" onclick="go('ending')">Next 💍</button>
+  </div>
+</div>
+
+<!-- PAGE 6 ENDING -->
+<div class="page hidden" id="ending">
+  <div class="card">
+    <h1>💍 Will You Stay With Me?</h1>
+    <p>Aku mau kita terus bareng 🤍</p>
+    <button class="primary" onclick="sayYes()">YES, ALWAYS 💞</button>
+    <button class="outline" id="noBtn" onmouseover="runAway()">NO 😳</button>
+  </div>
+</div>
+
+<!-- POPUP -->
+<div class="popup hidden" id="yesPopup">
+  <div class="popup-box">
+    <h1>💖 She Said YES!</h1>
+    <p>Hari ini, besok, dan seterusnya 🤍</p>
+    <button class="primary" onclick="closePopup()">Peluk Aku 🤍</button>
+  </div>
 </div>
 
 <script>
-const pages=document.querySelectorAll('.center');
+/* NAV */
 function go(id){
-  pages.forEach(p=>p.classList.add('hidden'));
+  document.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));
   document.getElementById(id).classList.remove('hidden');
 }
 
 /* MUSIC */
 let playing=false;
 function toggleMusic(){
-  const m=document.getElementById('music');
-  if(playing){m.pause()}else{m.play()}
+  playing?music.pause():music.play();
   playing=!playing;
 }
 
 /* CODE */
 function checkCode(){
   if(codeInput.value==="250825"){
-    go('puzzle');
-  }else alert("Salah sayang 😜");
+    go('puzzlePage');
+    startPuzzle();
+  }else alert("Masih salah 😜");
 }
 
 /* PUZZLE */
-const grid=document.getElementById('puzzleGrid');
-let order=[...Array(9).keys()].sort(()=>Math.random()-0.5);
-function draw(){
-  grid.innerHTML='';
-  order.forEach((n,i)=>{
+const puzzle=document.getElementById('puzzle');
+let correct=[0,1,2,3,4,5,6,7,8];
+let order=[...correct].sort(()=>Math.random()-0.5);
+let drag=null;
+
+function startPuzzle(){
+  puzzle.innerHTML='';
+  order.forEach(i=>{
     const d=document.createElement('div');
-    d.className='tile';
-    d.style.backgroundImage="url('foto1.jpeg')";
-    d.style.backgroundPosition=`${(n%3)*50}% ${Math.floor(n/3)*50}%`;
-    d.onclick=()=>swap(i);
-    grid.appendChild(d);
+    d.className='piece';
+    d.draggable=true;
+    d.dataset.id=i;
+    d.style.backgroundPosition=`${(i%3)*50}% ${Math.floor(i/3)*50}%`;
+    d.ondragstart=()=>drag=d;
+    d.ondragover=e=>e.preventDefault();
+    d.ondrop=()=>{
+      if(!drag)return;
+      [drag.style.backgroundPosition,d.style.backgroundPosition]=
+      [d.style.backgroundPosition,drag.style.backgroundPosition];
+      [drag.dataset.id,d.dataset.id]=[d.dataset.id,drag.dataset.id];
+      checkPuzzle();
+    };
+    puzzle.appendChild(d);
   });
 }
-function swap(i){
-  if(i>0)[order[i],order[i-1]]=[order[i-1],order[i]];
-  draw();
-  if(order.every((v,i)=>v===i))setTimeout(()=>go('gallery'),400);
-}
-draw();
-
-/* GALERI SWIPE */
-let idx=1;
-const img=document.getElementById('galleryImg');
-let startX=0;
-img.ontouchstart=e=>startX=e.touches[0].clientX;
-img.ontouchend=e=>{
-  if(e.changedTouches[0].clientX<startX-40){
-    idx=idx%9+1;
-    img.src=`foto${idx}.jpeg`;
+function checkPuzzle(){
+  const ok=[...puzzle.children].every((p,i)=>+p.dataset.id===i);
+  if(ok){
+    launchConfetti();
+    setTimeout(()=>showLetter(),800);
   }
-};
+}
+
+/* CONFETTI */
+function launchConfetti(){
+  for(let i=0;i<120;i++){
+    const s=document.createElement('span');
+    s.style.left=Math.random()*100+'vw';
+    s.style.animationDuration=2+Math.random()*2+'s';
+    s.style.setProperty('--c',`hsl(${Math.random()*360},80%,70%)`);
+    confetti.appendChild(s);
+    setTimeout(()=>s.remove(),4000);
+  }
+}
+
+/* LETTER */
+const message=`Terima kasih sudah hadir
+dan bertahan bersamaku 💖
+
+Aku harap kita selalu
+saling memilih
+di setiap hari yang datang 💕`;
+function showLetter(){
+  go('letterPage');
+  letterText.textContent='';
+  let i=0;
+  const t=setInterval(()=>{
+    letterText.textContent+=message[i++];
+    if(i>=message.length)clearInterval(t);
+  },40);
+}
+
+/* GALERI */
+let idx=1,startX=0;
+galleryImg.ontouchstart=e=>startX=e.touches[0].clientX;
+galleryImg.ontouchend=e=>{
+  if(e.changedTouches[0].clientX<startX-40){
+    galleryImg.style.opacity=0;
+    setTimeout(()=>{
+      idx=idx%9+1;
+      galleryImg.src=`foto${idx}.jpeg`;
+      galleryImg.style.opacity=1;
+    },250);
+  }
+}
 
 /* COUNTDOWN */
 const target=new Date(2025,7,25);
-const now=new Date();
-const days=Math.ceil((target-now)/86400000);
-countdown.innerHTML=`💞 menuju hari jadian kita 💞`;
+const days=Math.ceil((target-new Date())/86400000);
+countdown.innerHTML=`💞 ${days} hari menuju hari jadian kita 💞`;
 
-/* INIT */
+/* ENDING */
+function sayYes(){
+  launchConfetti();
+  yesPopup.classList.remove('hidden');
+}
+function closePopup(){
+  yesPopup.classList.add('hidden');
+}
+function runAway(){
+  noBtn.style.transform=`translate(${Math.random()*200-100}px,${Math.random()*200-100}px)`;
+}
+
 window.onload=()=>go('start');
 </script>
 
