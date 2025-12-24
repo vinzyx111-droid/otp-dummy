@@ -7,186 +7,105 @@
 
 <style>
 /* ===== BASE ===== */
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
-  background: #0e1621;
-  color: #e6e6e6;
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;
+  background:#0e1621;
+  color:#e6e6e6;
 }
-body.light {
-  background: #f3f4f6;
-  color: #111827;
-}
+body.light{background:#f3f4f6;color:#111827}
 
 /* ===== CONTAINER ===== */
-.container {
-  max-width: 480px;
-  margin: 0 auto;
-  padding: 12px;
-}
+.container{max-width:480px;margin:0 auto;padding:12px}
 
 /* ===== HEADER ===== */
-.app-header {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background: #0e1621;
-  border-bottom: 1px solid #1f2937;
-  padding: 10px 0;
-  text-align: center;
+.app-header{
+  position:sticky;top:0;z-index:10;
+  background:#0e1621;
+  border-bottom:1px solid #1f2937;
+  text-align:center;padding:10px 0
 }
-body.light .app-header {
-  background: #f3f4f6;
-  border-bottom-color: #e5e7eb;
+body.light .app-header{background:#f3f4f6;border-color:#e5e7eb}
+.title{font-weight:700;color:#58a6ff}
+body.light .title{color:#2563eb}
+.status{font-size:12px;color:#9ca3af}
+.dot{
+  display:inline-block;width:8px;height:8px;
+  background:#22c55e;border-radius:50%;
+  animation:pulse 1.2s infinite;margin-right:6px
 }
-.app-header .title {
-  font-weight: 700;
-  color: #58a6ff;
+@keyframes pulse{
+  0%{opacity:.6;transform:scale(.8)}
+  50%{opacity:1;transform:scale(1)}
+  100%{opacity:.6;transform:scale(.8)}
 }
-body.light .app-header .title { color: #2563eb; }
-.app-header .status {
-  font-size: 12px;
-  color: #9ca3af;
-  margin-bottom: 6px;
+
+/* ===== BUTTON ===== */
+button{
+  width:100%;padding:12px;border:none;border-radius:8px;
+  background:#2ea6ff;color:#fff;font-weight:bold;
+  touch-action:manipulation
 }
-.app-header button {
-  margin: 2px;
-}
+button:active{transform:scale(.97);opacity:.85}
+button:disabled{opacity:.5}
 
 /* ===== CARD ===== */
-.box {
-  background: #17212b;
-  padding: 14px;
-  margin-bottom: 12px;
-  border-radius: 12px;
-}
-body.light .box { background: #ffffff; }
-
-button {
-  width: 100%;
-  background: #2ea6ff;
-  border: none;
-  color: #fff;
-  padding: 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
-}
-button:disabled { opacity: .5; cursor: not-allowed; }
-body.light button { background: #2563eb; }
-
-select {
-  width: 100%;
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #2a3b4d;
-  background: #0e1621;
-  color: #e6e6e6;
-}
-body.light select {
-  background: #ffffff;
-  color: #111827;
-  border-color: #d1d5db;
-}
-
-.otp {
-  font-size: 26px;
-  color: #4ade80;
-  letter-spacing: 4px;
-}
+.box{background:#17212b;padding:14px;border-radius:12px;margin-bottom:12px}
+body.light .box{background:#fff}
 
 /* ===== CHAT ===== */
-#feed {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+#feed{list-style:none;padding:0;margin:0}
+.chat-item{display:flex;gap:8px;margin-bottom:8px}
+.chat-left{flex-direction:row}
+.chat-right{flex-direction:row-reverse}
+.avatar{
+  width:34px;height:34px;border-radius:50%;
+  background:#2ea6ff;color:#fff;
+  display:flex;align-items:center;justify-content:center;font-weight:bold
 }
-.chat-item {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 8px;
+.chat-right .avatar{background:#22c55e}
+.bubble{
+  background:#182533;padding:10px 12px;border-radius:12px;
+  font-size:13px;max-width:75%
 }
-.chat-left { flex-direction: row; }
-.chat-right { flex-direction: row-reverse; }
+.chat-right .bubble{background:#1f6feb;text-align:right}
+body.light .bubble{background:#e5e7eb;color:#111827}
+body.light .chat-right .bubble{background:#bfdbfe}
 
-.avatar {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: #2ea6ff;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-}
-.chat-right .avatar { background: #22c55e; }
+/* ===== ANIMATION ===== */
+@keyframes slideL{from{transform:translateX(-20px);opacity:0}to{opacity:1}}
+@keyframes slideR{from{transform:translateX(20px);opacity:0}to{opacity:1}}
+.chat-left .bubble{animation:slideL .25s}
+.chat-right .bubble{animation:slideR .25s}
 
-.bubble {
-  background: #182533;
-  padding: 10px 12px;
-  border-radius: 12px;
-  font-size: 13px;
-  max-width: 75%;
-}
-.chat-right .bubble {
-  background: #1f6feb;
-  text-align: right;
-}
-body.light .bubble {
-  background: #e5e7eb;
-  color: #111827;
-}
-body.light .chat-right .bubble { background: #bfdbfe; }
-
-/* ===== TYPING DOTS ===== */
-.typing::after {
-  content: '';
-  animation: dots 1.2s infinite;
-}
-@keyframes dots {
-  0% { content: ''; }
-  33% { content: '.'; }
-  66% { content: '..'; }
-  100% { content: '...'; }
+/* ===== TYPING ===== */
+.typing::after{content:'';animation:dots 1.2s infinite}
+@keyframes dots{
+  0%{content:''}33%{content:'.'}66%{content:'..'}100%{content:'...'}
 }
 
-/* ===== BUBBLE ANIMATION ===== */
-@keyframes slideInLeft {
-  from { transform: translateX(-20px); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
-}
-@keyframes slideInRight {
-  from { transform: translateX(20px); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
-}
-.chat-left .bubble { animation: slideInLeft .25s ease-out; }
-.chat-right .bubble { animation: slideInRight .25s ease-out; }
-
-.time {
-  display: block;
-  font-size: 11px;
-  color: #9ca3af;
-  margin-top: 4px;
+/* ===== OTP EFFECT ===== */
+.otp{font-size:26px;color:#4ade80;letter-spacing:4px}
+.otp-glow{animation:glow 1s}
+@keyframes glow{
+  0%{text-shadow:none}
+  50%{text-shadow:0 0 14px #4ade80}
+  100%{text-shadow:none}
 }
 
-/* ===== COUNTDOWN + PROGRESS ===== */
-#countdown { font-size: 13px; color: #9ca3af; }
-.progress-wrap {
-  width: 100%;
-  height: 6px;
-  background: #1f2937;
-  border-radius: 4px;
-  overflow: hidden;
-  margin-top: 6px;
+/* ===== PROGRESS ===== */
+.progress-wrap{height:6px;background:#1f2937;border-radius:4px;overflow:hidden}
+#progressBar{height:100%;width:0;background:linear-gradient(90deg,#22c55e,#2ea6ff)}
+
+/* ===== TOAST ===== */
+#toast{
+  position:fixed;bottom:24px;left:50%;
+  transform:translateX(-50%) translateY(20px);
+  background:#111827;color:#fff;
+  padding:12px 16px;border-radius:999px;
+  font-size:13px;opacity:0;transition:.3s;z-index:9999
 }
-#progressBar {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(90deg, #22c55e, #2ea6ff);
-  transition: width 1s linear;
-}
-body.light .progress-wrap { background: #e5e7eb; }
+#toast.show{opacity:1;transform:translateX(-50%)}
 </style>
 </head>
 
@@ -195,10 +114,9 @@ body.light .progress-wrap { background: #e5e7eb; }
 
 <header class="app-header">
   <div class="title">OTP Simulator</div>
-  <div class="status">online • simulation</div>
-  <button id="themeBtn" onclick="toggleTheme()">🌙 Dark</button>
-  <button id="soundBtn" onclick="toggleSound()">🔊 Sound</button>
-  <button onclick="previewSound()">▶️ Preview</button>
+  <div class="status"><span class="dot"></span>online • uptime <span id="uptime">00:00</span></div>
+  <button onclick="unlockAudio()">🔓 Enable Sound</button>
+  <button onclick="toggleTheme()">🌙 / ☀️</button>
 </header>
 
 <div class="box">
@@ -208,157 +126,100 @@ body.light .progress-wrap { background: #e5e7eb; }
 
 <div class="box">
   <select id="service">
-    <option value="WhatsApp">WhatsApp</option>
-    <option value="Telegram">Telegram</option>
-  </select>
-  <br><br>
+    <option>WhatsApp</option>
+    <option>Telegram</option>
+  </select><br><br>
   <button id="otpBtn" onclick="generateOTP()">Generate OTP</button>
   <p id="countdown"></p>
   <div class="progress-wrap"><div id="progressBar"></div></div>
-  <p id="sms"></p>
   <div id="otp" class="otp"></div>
 </div>
 
-<div class="box">
-  <ul id="feed"></ul>
+<div class="box"><ul id="feed"></ul></div>
+
 </div>
+
+<div id="toast"></div>
 
 <!-- AUDIO -->
-<audio id="soundWA" preload="auto">
-  <source src="https://assets.mixkit.co/sfx/preview/mixkit-message-pop-alert-2354.mp3" type="audio/mpeg">
-</audio>
-<audio id="soundTG" preload="auto">
-  <source src="https://assets.mixkit.co/sfx/preview/mixkit-software-interface-start-2574.mp3" type="audio/mpeg">
-</audio>
-
-</div>
+<audio id="sndClick" src="https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3"></audio>
+<audio id="sndAction" src="https://assets.mixkit.co/sfx/preview/mixkit-interface-click-1126.mp3"></audio>
+<audio id="sndError" src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3"></audio>
+<audio id="soundWA" src="https://assets.mixkit.co/sfx/preview/mixkit-message-pop-alert-2354.mp3"></audio>
+<audio id="soundTG" src="https://assets.mixkit.co/sfx/preview/mixkit-software-interface-start-2574.mp3"></audio>
 
 <script>
-/* ===== DATA ===== */
-let dummyNumbers = ["+999811234567","+888700000111","+777600009999"];
-let index = 0;
-let activeNumber = null;
+/* ===== STATE ===== */
+let audioUnlocked=false,soundEnabled=true;
+let dummy=["+999811234567","+888700000111","+777600009999"];
+let idx=0,active=null,cooldown=5,timer=null;
+let start=Date.now();
 
-/* ===== COUNTDOWN ===== */
-let cooldown = 5;
-let countdownTimer = null;
+/* ===== UTIL ===== */
+const $=id=>document.getElementById(id);
+function toast(t){let x=$("toast");x.innerText=t;x.classList.add("show");setTimeout(()=>x.classList.remove("show"),1500)}
+function vibrate(ms=20){navigator.vibrate&&navigator.vibrate(ms)}
+function play(id){if(!audioUnlocked||!soundEnabled)return;let a=$(id);a.currentTime=0;a.play().catch(()=>{})}
+
+/* ===== AUDIO UNLOCK ===== */
+function unlockAudio(){
+  ["sndClick","sndAction","sndError","soundWA","soundTG"].forEach(id=>{
+    let a=$(id);a.play().then(()=>a.pause()).catch(()=>{})
+  });
+  audioUnlocked=true;
+  toast("Sound enabled");
+}
 
 /* ===== THEME ===== */
-function toggleTheme(){
-  document.body.classList.toggle("light");
-  let l = document.body.classList.contains("light");
-  localStorage.setItem("theme", l?"light":"dark");
-  document.getElementById("themeBtn").innerText = l?"☀️ Light":"🌙 Dark";
-}
-(function(){
-  if(localStorage.getItem("theme")==="light"){
-    document.body.classList.add("light");
-    document.getElementById("themeBtn").innerText="☀️ Light";
-  }
-})();
+function toggleTheme(){document.body.classList.toggle("light")}
 
-/* ===== SOUND ===== */
-let soundEnabled = localStorage.getItem("sound")!=="off";
-function toggleSound(){
-  soundEnabled=!soundEnabled;
-  localStorage.setItem("sound", soundEnabled?"on":"off");
-  document.getElementById("soundBtn").innerText = soundEnabled?"🔊 Sound":"🔇 Sound";
-}
-function playSound(service){
-  if(!soundEnabled) return;
-  let a = service==="WhatsApp"?soundWA:soundTG;
-  a.currentTime=0; a.play().catch(()=>{});
-}
-function previewSound(){
-  playSound(document.getElementById("service").value);
-}
+/* ===== UPTIME ===== */
+setInterval(()=>{
+  let s=Math.floor((Date.now()-start)/1000);
+  $("uptime").innerText=String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");
+},1000)
 
-/* ===== STORAGE ===== */
-function saveFeed(){ localStorage.setItem("otpFeed", feed.innerHTML); }
-(function(){
-  let s = localStorage.getItem("otpFeed");
-  if(s) feed.innerHTML = s;
-})();
-
-/* ===== NUMBER ===== */
+/* ===== CORE ===== */
 function getNumber(){
-  activeNumber = dummyNumbers[index];
-  number.innerText = "Nomor: "+activeNumber;
-  index = (index+1)%dummyNumbers.length;
+  play("sndClick");
+  active=dummy[idx];idx=(idx+1)%dummy.length;
+  $("number").innerText="Nomor: "+active;
 }
 
-/* ===== CORE OTP ===== */
-function generateOTP(auto=false){
-  if(countdownTimer && !auto) return;
-  if(!activeNumber) return;
+function generateOTP(){
+  if(timer){play("sndError");toast("Cooldown");return}
+  if(!active){toast("Ambil nomor dulu");return}
 
-  let service = auto ? (Math.random()>0.5?"WhatsApp":"Telegram") : serviceSel.value;
-  let position = service==="WhatsApp"?"chat-right":"chat-left";
-
-  let typing = document.createElement("li");
-  typing.innerHTML = `
-    <div class="chat-item ${position}">
-      <div class="avatar">${service[0]}</div>
-      <div class="bubble typing">${service} is typing</div>
-    </div>`;
-  feed.appendChild(typing);
-  typing.scrollIntoView({behavior:"smooth"});
+  play("sndAction");
+  let svc=$("service").value,pos=svc==="WhatsApp"?"chat-right":"chat-left";
+  let li=document.createElement("li");
+  li.innerHTML=`<div class="chat-item ${pos}">
+    <div class="avatar">${svc[0]}</div>
+    <div class="bubble typing">${svc} is typing</div></div>`;
+  feed.appendChild(li);li.scrollIntoView();
 
   setTimeout(()=>{
-    typing.remove();
-    let otp = Math.floor(100000+Math.random()*900000);
-    let time = new Date().toLocaleTimeString().slice(0,5);
+    li.remove();
+    let otp=Math.floor(100000+Math.random()*900000);
+    $("otp").innerText=otp;
+    $("otp").classList.add("otp-glow");
+    play(svc==="WhatsApp"?"soundWA":"soundTG");
+    vibrate(30);
+    toast("OTP received");
 
-    let li = document.createElement("li");
-    li.innerHTML = `
-      <div class="chat-item ${position}">
-        <div class="avatar">${service[0]}</div>
-        <div class="bubble">
-          <b>${service}</b><br>
-          ${activeNumber}<br>
-          OTP: <b style="color:#4ade80">${otp}</b>
-          <span class="time">${time}</span>
-        </div>
-      </div>`;
-    feed.appendChild(li);
-    li.scrollIntoView({behavior:"smooth"});
-    playSound(service);
-    saveFeed();
+    let msg=document.createElement("li");
+    msg.innerHTML=`<div class="chat-item ${pos}">
+      <div class="avatar">${svc[0]}</div>
+      <div class="bubble">${active}<br><b>${otp}</b></div></div>`;
+    feed.appendChild(msg);msg.scrollIntoView();
 
-    if(!auto){
-      let t=cooldown, bar=progressBar;
-      otpBtn.disabled=true; bar.style.width="100%";
-      countdown.innerText=`Tunggu ${t} detik`;
-      countdownTimer=setInterval(()=>{
-        t--; bar.style.width=(t/cooldown*100)+"%";
-        countdown.innerText=`Tunggu ${t} detik`;
-        if(t<=0){
-          clearInterval(countdownTimer);
-          countdownTimer=null;
-          otpBtn.disabled=false;
-          countdown.innerText="Siap generate OTP lagi";
-          bar.style.width="0%";
-        }
-      },1000);
-    }
-  },1000+Math.random()*1000);
+    let t=cooldown;timer=setInterval(()=>{
+      $("countdown").innerText=`Tunggu ${t}s`;
+      $("progressBar").style.width=(t/cooldown*100)+"%";
+      if(--t<0){clearInterval(timer);timer=null;$("countdown").innerText="Siap";$("progressBar").style.width="0"}
+    },1000)
+  },1200)
 }
-
-/* ===== AUTO ACTIVITY (FAKE REAL-TIME) ===== */
-setInterval(()=>{
-  if(Math.random()<0.35){
-    if(!activeNumber) getNumber();
-    generateOTP(true);
-  }
-},6000);
-
-/* ===== SHORTCUTS ===== */
-const feed=document.getElementById("feed");
-const number=document.getElementById("number");
-const serviceSel=document.getElementById("service");
-const otpBtn=document.getElementById("otpBtn");
-const countdown=document.getElementById("countdown");
-const progressBar=document.getElementById("progressBar");
 </script>
 
 </body>
