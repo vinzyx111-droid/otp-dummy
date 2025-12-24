@@ -3,283 +3,205 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hello My Love 💖</title>
+<title>For My Love 💖</title>
 
 <!-- FONT -->
-<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
 
 <style>
 *{box-sizing:border-box}
 body{
   margin:0;
-  font-family:'Poppins',sans-serif;
-  background:#ffe6f0;
-  overflow-x:hidden;
-}
-.hidden{display:none}
-.center{
+  font-family:'Patrick Hand',cursive;
+  background:linear-gradient(135deg,#ffe6ee,#ffd1dc);
   min-height:100vh;
   display:flex;
-  justify-content:center;
   align-items:center;
-  text-align:center;
-  padding:20px;
+  justify-content:center;
 }
-.card{
+
+.hidden{display:none!important}
+
+.center{
   background:#fff;
-  border-radius:24px;
-  padding:30px;
+  width:90%;
   max-width:420px;
-  width:100%;
-  box-shadow:0 20px 40px rgba(0,0,0,.1);
+  padding:24px;
+  border-radius:22px;
+  box-shadow:0 20px 40px rgba(0,0,0,.15);
+  text-align:center;
   animation:fade .6s ease;
 }
-h1{
-  font-family:'Patrick Hand',cursive;
-  font-size:38px;
-  margin:0 0 10px;
-}
+
+h1{margin:10px 0;font-size:28px}
 p{color:#555}
+
 button{
   border:none;
-  padding:14px 26px;
+  padding:14px 22px;
   border-radius:999px;
   font-size:16px;
   cursor:pointer;
   margin:8px;
 }
-.yes{background:#ff7aa2;color:#fff}
-.no{background:#fff;border:2px solid #ff7aa2;color:#ff7aa2}
 
-.music{
-  position:fixed;
-  bottom:20px;
-  right:20px;
-  width:56px;
-  height:56px;
-  border-radius:50%;
-  background:#ff7aa2;
-  color:#fff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:24px;
-  z-index:999;
-}
+.primary{background:#ff7fa8;color:#fff}
+.outline{background:#fff;border:2px solid #ff7fa8;color:#ff7fa8}
 
-.parallax{
-  position:fixed;
-  inset:0;
-  background:
-    radial-gradient(circle at top,#fff,transparent 40%),
-    linear-gradient(180deg,#ffd6e8,#ffeef5);
-  z-index:-1;
-}
-
-@keyframes fade{
-  from{opacity:0;transform:scale(.9)}
-  to{opacity:1;transform:scale(1)}
+input{
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  border:1px solid #ddd;
+  font-size:16px;
+  margin:10px 0;
+  text-align:center;
 }
 
 /* PUZZLE */
 .puzzle{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:3px;
-  margin-top:15px;
+  gap:4px;
+  margin-top:14px;
 }
 .tile{
   aspect-ratio:1/1;
-  background-image:url('foto1.jpeg');
   background-size:300% 300%;
+  border-radius:8px;
   cursor:pointer;
 }
 
-/* CONFETTI */
-.confetti{
-  position:fixed;
-  width:8px;height:14px;
-  animation:fall linear infinite;
-}
-@keyframes fall{
-  to{transform:translateY(110vh) rotate(360deg)}
-}
-
-/* GALLERY */
-.gallery{
-  display:flex;
-  overflow-x:auto;
-  gap:12px;
-  scroll-snap-type:x mandatory;
-}
+/* GALERI */
 .gallery img{
-  width:260px;
+  width:100%;
   border-radius:18px;
-  scroll-snap-align:center;
 }
 
-/* LETTER */
-#letter{
-  white-space:pre-line;
-  font-size:16px;
-  line-height:1.6;
+/* AUDIO */
+#audioBtn{
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  width:54px;
+  height:54px;
+  border-radius:50%;
+  background:#ff7fa8;
+  color:#fff;
+  font-size:24px;
+}
+
+@keyframes fade{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:none}
 }
 </style>
 </head>
 
 <body>
 
-<div class="parallax"></div>
-
-<audio id="bgm" loop>
+<!-- AUDIO -->
+<audio id="music" loop>
   <source src="lagu-kita.mp3" type="audio/mpeg">
 </audio>
-<div class="music" onclick="toggleMusic()">🎵</div>
+<button id="audioBtn" onclick="toggleMusic()">🎵</button>
 
 <!-- PAGE 1 -->
 <div class="center" id="start">
-  <div class="card">
-    <h1>Hello My Love 💖</h1>
-    <p>Do you want to see your gift?</p>
-    <button class="yes" onclick="go('code')">YES PLEASE</button>
-    <button class="no" onclick="alert('Yahhh 😢 coba lagi dong')">NO THANKS</button>
-  </div>
+  <h1>Hello My Love 💖</h1>
+  <p>Do you want to see your gift?</p>
+  <button class="primary" onclick="go('code')">YES PLEASE</button>
+  <button class="outline" onclick="alert('Yahh 😭 coba lagi dong')">NO THANKS</button>
 </div>
 
-<!-- CODE -->
+<!-- PAGE 2 CODE -->
 <div class="center hidden" id="code">
-  <div class="card">
-    <h1>🔐 Secret Code</h1>
-    <p>Clue 6 angka: Tanggal/Bulan/Tahun</p>
-    <input id="pass" placeholder="contoh: 250825"
-      style="width:100%;padding:14px;border-radius:12px;border:1px solid #ccc">
-    <br><br>
-    <button class="yes" onclick="check()">Masuk 💖</button>
-  </div>
+  <h1>🔐 Secret Code</h1>
+  <p>Clue 6 angka</p>
+  <input id="codeInput" placeholder="Tanggal / Bulan / Tahun">
+  <button class="primary" onclick="checkCode()">Masuk 💗</button>
 </div>
 
-<!-- PUZZLE -->
-<div class="center hidden" id="puzzlePage">
-  <div class="card">
-    <h1>🧩 Puzzle Time</h1>
-    <p>Susun fotonya dulu yaa 😘</p>
-    <div class="puzzle" id="puzzle"></div>
-  </div>
+<!-- PAGE 3 PUZZLE -->
+<div class="center hidden" id="puzzle">
+  <h1>🧩 Puzzle Time</h1>
+  <p>Susun fotonya dulu ya 😘</p>
+  <div class="puzzle" id="puzzleGrid"></div>
 </div>
 
-<!-- GALLERY -->
-<div class="center hidden" id="galleryPage">
-  <div class="card">
-    <h1>I Love You 💖</h1>
-    <p id="count"></p>
-
-    <div class="gallery">
-      <img src="foto1.jpeg">
-      <img src="foto2.jpeg">
-      <img src="foto3.jpeg">
-      <img src="foto4.jpeg">
-      <img src="foto5.jpeg">
-      <img src="foto6.jpeg">
-      <img src="foto7.jpeg">
-      <img src="foto8.jpeg">
-      <img src="foto9.jpeg">
-    </div>
-
-    <p id="letter"></p>
+<!-- PAGE 4 GALERI -->
+<div class="center hidden" id="gallery">
+  <h1>I Love You 💖</h1>
+  <p id="countdown"></p>
+  <div class="gallery">
+    <img id="galleryImg" src="foto1.jpeg">
   </div>
+  <p>Geser → untuk lihat foto selanjutnya</p>
 </div>
 
 <script>
+const pages=document.querySelectorAll('.center');
 function go(id){
-  document.querySelectorAll('.center').forEach(e=>e.classList.add('hidden'));
+  pages.forEach(p=>p.classList.add('hidden'));
   document.getElementById(id).classList.remove('hidden');
 }
 
+/* MUSIC */
+let playing=false;
 function toggleMusic(){
-  const a=document.getElementById('bgm');
-  a.paused?a.play():a.pause();
+  const m=document.getElementById('music');
+  if(playing){m.pause()}else{m.play()}
+  playing=!playing;
 }
 
-function check(){
-  if(pass.value==="250825"){
-    go('puzzlePage');
-    startPuzzle();
-  }else alert('Kode salah 😝');
+/* CODE */
+function checkCode(){
+  if(codeInput.value==="250825"){
+    go('puzzle');
+  }else alert("Salah sayang 😜");
 }
 
-/* PUZZLE LOGIC */
-let correct=[
-"0% 0%","50% 0%","100% 0%",
-"0% 50%","50% 50%","100% 50%",
-"0% 100%","50% 100%","100% 100%"
-];
-let current=[...correct].sort(()=>Math.random()-.5);
-let sel=null;
-
-function startPuzzle(){
-  puzzle.innerHTML="";
-  current.forEach(pos=>{
-    let d=document.createElement('div');
+/* PUZZLE */
+const grid=document.getElementById('puzzleGrid');
+let order=[...Array(9).keys()].sort(()=>Math.random()-0.5);
+function draw(){
+  grid.innerHTML='';
+  order.forEach((n,i)=>{
+    const d=document.createElement('div');
     d.className='tile';
-    d.style.backgroundPosition=pos;
-    d.onclick=()=>swap(d);
-    puzzle.appendChild(d);
+    d.style.backgroundImage="url('foto1.jpeg')";
+    d.style.backgroundPosition=`${(n%3)*50}% ${Math.floor(n/3)*50}%`;
+    d.onclick=()=>swap(i);
+    grid.appendChild(d);
   });
 }
-function swap(el){
-  if(!sel){sel=el;el.style.outline='2px solid pink'}
-  else{
-    let a=el.style.backgroundPosition;
-    el.style.backgroundPosition=sel.style.backgroundPosition;
-    sel.style.backgroundPosition=a;
-    el.style.outline=sel.style.outline='none';
-    sel=null;
-    checkDone();
-  }
+function swap(i){
+  if(i>0)[order[i],order[i-1]]=[order[i-1],order[i]];
+  draw();
+  if(order.every((v,i)=>v===i))setTimeout(()=>go('gallery'),400);
 }
-function checkDone(){
-  let tiles=[...document.querySelectorAll('.tile')];
-  if(tiles.every((t,i)=>t.style.backgroundPosition===correct[i])){
-    confetti();
-    go('galleryPage');
-    startLetter();
-    countDay();
-  }
-}
+draw();
 
-/* CONFETTI */
-function confetti(){
-  for(let i=0;i<150;i++){
-    let c=document.createElement('div');
-    c.className='confetti';
-    c.style.left=Math.random()*100+'vw';
-    c.style.background=`hsl(${Math.random()*360},100%,70%)`;
-    c.style.animationDuration=2+Math.random()*3+'s';
-    document.body.appendChild(c);
-    setTimeout(()=>c.remove(),5000);
+/* GALERI SWIPE */
+let idx=1;
+const img=document.getElementById('galleryImg');
+let startX=0;
+img.ontouchstart=e=>startX=e.touches[0].clientX;
+img.ontouchend=e=>{
+  if(e.changedTouches[0].clientX<startX-40){
+    idx=idx%9+1;
+    img.src=`foto${idx}.jpeg`;
   }
-}
-
-/* LETTER */
-let text=`Terima kasih sudah hadir dan bertahan bersamaku.
-Aku harap kita selalu saling memilih,
-di setiap hari yang datang 💖`;
-let i=0;
-function startLetter(){
-  letter.innerText="";
-  let t=setInterval(()=>{
-    letter.innerText+=text[i++];
-    if(i>=text.length)clearInterval(t);
-  },40);
-}
+};
 
 /* COUNTDOWN */
-function countDay(){
-  const start=new Date(2025,7,25);
-  const now=new Date();
-  const diff=Math.ceil((start-now)/(1000*60*60*24));
-  count.innerText=`💞 ${diff} hari menuju hari jadian kita 💞`;
-}
+const target=new Date(2025,7,25);
+const now=new Date();
+const days=Math.ceil((target-now)/86400000);
+countdown.innerHTML=`💞 menuju hari jadian kita 💞`;
+
+/* INIT */
+window.onload=()=>go('start');
 </script>
 
 </body>
