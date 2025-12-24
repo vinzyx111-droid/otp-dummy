@@ -1,226 +1,103 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OTP Simulator</title>
+  <meta charset="UTF-8">
+  <title>💖 For My Love</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-/* ===== BASE ===== */
-body{
-  margin:0;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;
-  background:#0e1621;
-  color:#e6e6e6;
-}
-body.light{background:#f3f4f6;color:#111827}
+  <style>
+    * { box-sizing: border-box; }
 
-/* ===== CONTAINER ===== */
-.container{max-width:480px;margin:0 auto;padding:12px}
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      text-align: center;
+    }
 
-/* ===== HEADER ===== */
-.app-header{
-  position:sticky;top:0;z-index:10;
-  background:#0e1621;
-  border-bottom:1px solid #1f2937;
-  text-align:center;padding:10px 0
-}
-body.light .app-header{background:#f3f4f6;border-color:#e5e7eb}
-.title{font-weight:700;color:#58a6ff}
-body.light .title{color:#2563eb}
-.status{font-size:12px;color:#9ca3af}
-.dot{
-  display:inline-block;width:8px;height:8px;
-  background:#22c55e;border-radius:50%;
-  animation:pulse 1.2s infinite;margin-right:6px
-}
-@keyframes pulse{
-  0%{opacity:.6;transform:scale(.8)}
-  50%{opacity:1;transform:scale(1)}
-  100%{opacity:.6;transform:scale(.8)}
-}
+    .container {
+      background: rgba(255,255,255,0.15);
+      padding: 25px;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 420px;
+      animation: fadeIn 0.8s ease;
+    }
 
-/* ===== BUTTON ===== */
-button{
-  width:100%;padding:12px;border:none;border-radius:8px;
-  background:#2ea6ff;color:#fff;font-weight:bold;
-  touch-action:manipulation
-}
-button:active{transform:scale(.97);opacity:.85}
-button:disabled{opacity:.5}
+    button {
+      padding: 12px 20px;
+      margin: 10px;
+      border: none;
+      border-radius: 30px;
+      font-size: 16px;
+      cursor: pointer;
+    }
 
-/* ===== CARD ===== */
-.box{background:#17212b;padding:14px;border-radius:12px;margin-bottom:12px}
-body.light .box{background:#fff}
+    .yes { background: #ff4d6d; color: #fff; }
+    .no { background: #fff; color: #ff4d6d; }
 
-/* ===== CHAT ===== */
-#feed{list-style:none;padding:0;margin:0}
-.chat-item{display:flex;gap:8px;margin-bottom:8px}
-.chat-left{flex-direction:row}
-.chat-right{flex-direction:row-reverse}
-.avatar{
-  width:34px;height:34px;border-radius:50%;
-  background:#2ea6ff;color:#fff;
-  display:flex;align-items:center;justify-content:center;font-weight:bold
-}
-.chat-right .avatar{background:#22c55e}
-.bubble{
-  background:#182533;padding:10px 12px;border-radius:12px;
-  font-size:13px;max-width:75%
-}
-.chat-right .bubble{background:#1f6feb;text-align:right}
-body.light .bubble{background:#e5e7eb;color:#111827}
-body.light .chat-right .bubble{background:#bfdbfe}
+    .hidden { display: none; }
 
-/* ===== ANIMATION ===== */
-@keyframes slideL{from{transform:translateX(-20px);opacity:0}to{opacity:1}}
-@keyframes slideR{from{transform:translateX(20px);opacity:0}to{opacity:1}}
-.chat-left .bubble{animation:slideL .25s}
-.chat-right .bubble{animation:slideR .25s}
-
-/* ===== TYPING ===== */
-.typing::after{content:'';animation:dots 1.2s infinite}
-@keyframes dots{
-  0%{content:''}33%{content:'.'}66%{content:'..'}100%{content:'...'}
-}
-
-/* ===== OTP EFFECT ===== */
-.otp{font-size:26px;color:#4ade80;letter-spacing:4px}
-.otp-glow{animation:glow 1s}
-@keyframes glow{
-  0%{text-shadow:none}
-  50%{text-shadow:0 0 14px #4ade80}
-  100%{text-shadow:none}
-}
-
-/* ===== PROGRESS ===== */
-.progress-wrap{height:6px;background:#1f2937;border-radius:4px;overflow:hidden}
-#progressBar{height:100%;width:0;background:linear-gradient(90deg,#22c55e,#2ea6ff)}
-
-/* ===== TOAST ===== */
-#toast{
-  position:fixed;bottom:24px;left:50%;
-  transform:translateX(-50%) translateY(20px);
-  background:#111827;color:#fff;
-  padding:12px 16px;border-radius:999px;
-  font-size:13px;opacity:0;transition:.3s;z-index:9999
-}
-#toast.show{opacity:1;transform:translateX(-50%)}
-</style>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
 </head>
 
 <body>
-<div class="container">
 
-<header class="app-header">
-  <div class="title">OTP Simulator</div>
-  <div class="status"><span class="dot"></span>online • uptime <span id="uptime">00:00</span></div>
-  <button onclick="unlockAudio()">🔓 Enable Sound</button>
-  <button onclick="toggleTheme()">🌙 / ☀️</button>
-</header>
+  <!-- AUDIO -->
+  <audio id="bgMusic" loop>
+    <source src="lagu-kita.mp3" type="audio/mpeg">
+  </audio>
 
-<div class="box">
-  <button onclick="getNumber()">Get Number</button>
-  <p id="number"></p>
-</div>
+  <!-- PAGE 1 -->
+  <div class="container" id="page1">
+    <h1>🎁 Do you want to see your gift?</h1>
+    <p>Aku punya kejutan kecil buat kamu 💌</p>
+    <button class="yes" onclick="yesClick()">YES 💖</button>
+    <button class="no" onclick="noClick()">NO 😝</button>
+  </div>
 
-<div class="box">
-  <select id="service">
-    <option>WhatsApp</option>
-    <option>Telegram</option>
-  </select><br><br>
-  <button id="otpBtn" onclick="generateOTP()">Generate OTP</button>
-  <p id="countdown"></p>
-  <div class="progress-wrap"><div id="progressBar"></div></div>
-  <div id="otp" class="otp"></div>
-</div>
+  <!-- PAGE 2 (NO) -->
+  <div class="container hidden" id="pageNo">
+    <h1>😢 Yahhh...</h1>
+    <p>Coba klik YES dong 🥺</p>
+    <button class="yes" onclick="tryAgain()">TRY AGAIN 💕</button>
+  </div>
 
-<div class="box"><ul id="feed"></ul></div>
+  <!-- PAGE 3 (YES) -->
+  <div class="container hidden" id="pageYes">
+    <h1>💖 I Love You 💖</h1>
+    <p>Terima kasih sudah jadi bagian hidupku 🥰</p>
+  </div>
 
-</div>
+  <script>
+    function yesClick() {
+      document.getElementById('page1').classList.add('hidden');
+      document.getElementById('pageYes').classList.remove('hidden');
 
-<div id="toast"></div>
+      const music = document.getElementById('bgMusic');
+      music.volume = 0.8;
+      music.play();
+    }
 
-<!-- AUDIO -->
-<audio id="sndClick" src="https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3"></audio>
-<audio id="sndAction" src="https://assets.mixkit.co/sfx/preview/mixkit-interface-click-1126.mp3"></audio>
-<audio id="sndError" src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3"></audio>
-<audio id="soundWA" src="https://assets.mixkit.co/sfx/preview/mixkit-message-pop-alert-2354.mp3"></audio>
-<audio id="soundTG" src="https://assets.mixkit.co/sfx/preview/mixkit-software-interface-start-2574.mp3"></audio>
+    function noClick() {
+      document.getElementById('page1').classList.add('hidden');
+      document.getElementById('pageNo').classList.remove('hidden');
+    }
 
-<script>
-/* ===== STATE ===== */
-let audioUnlocked=false,soundEnabled=true;
-let dummy=["+999811234567","+888700000111","+777600009999"];
-let idx=0,active=null,cooldown=5,timer=null;
-let start=Date.now();
-
-/* ===== UTIL ===== */
-const $=id=>document.getElementById(id);
-function toast(t){let x=$("toast");x.innerText=t;x.classList.add("show");setTimeout(()=>x.classList.remove("show"),1500)}
-function vibrate(ms=20){navigator.vibrate&&navigator.vibrate(ms)}
-function play(id){if(!audioUnlocked||!soundEnabled)return;let a=$(id);a.currentTime=0;a.play().catch(()=>{})}
-
-/* ===== AUDIO UNLOCK ===== */
-function unlockAudio(){
-  ["sndClick","sndAction","sndError","soundWA","soundTG"].forEach(id=>{
-    let a=$(id);a.play().then(()=>a.pause()).catch(()=>{})
-  });
-  audioUnlocked=true;
-  toast("Sound enabled");
-}
-
-/* ===== THEME ===== */
-function toggleTheme(){document.body.classList.toggle("light")}
-
-/* ===== UPTIME ===== */
-setInterval(()=>{
-  let s=Math.floor((Date.now()-start)/1000);
-  $("uptime").innerText=String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");
-},1000)
-
-/* ===== CORE ===== */
-function getNumber(){
-  play("sndClick");
-  active=dummy[idx];idx=(idx+1)%dummy.length;
-  $("number").innerText="Nomor: "+active;
-}
-
-function generateOTP(){
-  if(timer){play("sndError");toast("Cooldown");return}
-  if(!active){toast("Ambil nomor dulu");return}
-
-  play("sndAction");
-  let svc=$("service").value,pos=svc==="WhatsApp"?"chat-right":"chat-left";
-  let li=document.createElement("li");
-  li.innerHTML=`<div class="chat-item ${pos}">
-    <div class="avatar">${svc[0]}</div>
-    <div class="bubble typing">${svc} is typing</div></div>`;
-  feed.appendChild(li);li.scrollIntoView();
-
-  setTimeout(()=>{
-    li.remove();
-    let otp=Math.floor(100000+Math.random()*900000);
-    $("otp").innerText=otp;
-    $("otp").classList.add("otp-glow");
-    play(svc==="WhatsApp"?"soundWA":"soundTG");
-    vibrate(30);
-    toast("OTP received");
-
-    let msg=document.createElement("li");
-    msg.innerHTML=`<div class="chat-item ${pos}">
-      <div class="avatar">${svc[0]}</div>
-      <div class="bubble">${active}<br><b>${otp}</b></div></div>`;
-    feed.appendChild(msg);msg.scrollIntoView();
-
-    let t=cooldown;timer=setInterval(()=>{
-      $("countdown").innerText=`Tunggu ${t}s`;
-      $("progressBar").style.width=(t/cooldown*100)+"%";
-      if(--t<0){clearInterval(timer);timer=null;$("countdown").innerText="Siap";$("progressBar").style.width="0"}
-    },1000)
-  },1200)
-}
-</script>
+    function tryAgain() {
+      document.getElementById('pageNo').classList.add('hidden');
+      document.getElementById('page1').classList.remove('hidden');
+    }
+  </script>
 
 </body>
 </html>
