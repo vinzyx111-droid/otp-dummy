@@ -2,116 +2,109 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Hello My Love 💖</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For My Love ❤️</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
 
 <style>
-*{box-sizing:border-box}
-html,body{
-  margin:0;
-  padding:0;
-  font-family:'Comic Neue',cursive;
-  overflow-x:hidden;
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Patrick Hand',cursive;
+  overflow:hidden;
   background:#000;
 }
 
-body{
-  overscroll-behavior:none;
-}
-
-/* ===== PARALLAX BACKGROUND ===== */
+/* PARALLAX */
 .parallax{
   position:fixed;
   inset:0;
-  background:
-    radial-gradient(circle at 20% 20%, #ffd6e8, transparent 40%),
-    radial-gradient(circle at 80% 30%, #ffb3d9, transparent 40%),
-    radial-gradient(circle at 50% 80%, #ffcce0, transparent 45%);
-  background-size:200% 200%;
-  animation:moveBg 20s infinite alternate;
-  z-index:-1;
+  background:linear-gradient(120deg,#ffb6c1,#ffc0cb,#ffdde1);
+  background-size:400% 400%;
+  animation:bgMove 18s ease infinite;
+  z-index:-2;
 }
-@keyframes moveBg{
-  from{background-position:0% 0%}
-  to{background-position:100% 100%}
+@keyframes bgMove{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
 }
 
-/* ===== CARD ===== */
+.screen{
+  position:absolute;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+}
+.screen.active{display:flex}
+
 .card{
-  max-width:360px;
-  margin:60px auto;
-  background:white;
+  background:#fff;
+  width:90%;
+  max-width:380px;
   border-radius:24px;
   padding:24px;
-  box-shadow:0 20px 40px rgba(0,0,0,.2);
   text-align:center;
-  animation:fadeIn .8s ease;
+  box-shadow:0 20px 50px rgba(0,0,0,.3);
 }
-@keyframes fadeIn{
-  from{opacity:0;transform:translateY(20px)}
-  to{opacity:1;transform:none}
-}
-
-.hidden{display:none}
 
 button{
   border:none;
-  padding:12px 24px;
-  border-radius:999px;
-  font-size:16px;
-  cursor:pointer;
-}
-.primary{background:#ff7aa8;color:white}
-.outline{background:none;border:2px solid #ff7aa8;color:#ff7aa8}
-
-.musicBtn{
-  position:fixed;
-  bottom:20px;
-  right:20px;
-  width:56px;
-  height:56px;
-  border-radius:50%;
-  background:#ff7aa8;
-  color:white;
-  font-size:22px;
+  padding:12px 22px;
+  border-radius:30px;
+  font-family:inherit;
+  font-size:18px;
+  background:#ff7aa2;
+  color:#fff;
+  margin-top:15px;
 }
 
-/* ===== PUZZLE ===== */
+input{
+  width:100%;
+  padding:12px;
+  font-size:18px;
+  border-radius:12px;
+  border:2px solid #ddd;
+  margin-top:10px;
+}
+
+/* PUZZLE */
 .puzzle{
   display:grid;
   grid-template-columns:repeat(3,1fr);
   gap:6px;
-  margin-top:16px;
+  margin-top:15px;
 }
-.puzzle img{
+.tile{
   width:100%;
+  aspect-ratio:1;
+  background-image:url('foto1.jpeg');
+  background-size:300% 300%;
   border-radius:12px;
   cursor:grab;
-  touch-action:none;
-  transition:transform .2s;
+  transition:transform .15s;
 }
-.puzzle img:active{cursor:grabbing;transform:scale(.95)}
+.tile:active{transform:scale(.95)}
 
+.hidden{display:none}
+
+/* CONFETTI */
 .confetti{
   position:fixed;
   inset:0;
   pointer-events:none;
-  z-index:10;
 }
-
-/* ===== ENDING ===== */
-.fadeBlack{
-  position:fixed;
-  inset:0;
-  background:black;
-  animation:fadeBlack 3s forwards;
-  z-index:20;
+.confetti span{
+  position:absolute;
+  width:8px;
+  height:8px;
+  background:hsl(var(--h),80%,60%);
+  animation:fall 3s linear infinite;
 }
-@keyframes fadeBlack{
-  from{opacity:0}
-  to{opacity:1}
+@keyframes fall{
+  from{transform:translateY(-10px)}
+  to{transform:translateY(110vh)}
 }
 </style>
 </head>
@@ -121,132 +114,116 @@ button{
 
 <audio id="music" src="lagu-lagi.mp3" loop></audio>
 
-<button class="musicBtn" onclick="toggleMusic()">🎵</button>
-
-<!-- STEP 1 -->
-<div class="card" id="step1">
-  <h2>Hello My Love 💖</h2>
-  <p>Do you want to see your gift?</p>
-  <button class="primary" onclick="go(2)">YES PLEASE</button><br><br>
-  <button class="outline" onclick="alert('Ayoo jangan gitu 😭')">NO THANKS</button>
+<!-- PASSWORD -->
+<div class="screen active" id="lock">
+  <div class="card">
+    <h2>🔒 Secret Code</h2>
+    <p>Clue 6 angka:<br>Tanggal/Bulan/Tahun</p>
+    <input id="code" placeholder="contoh: 250825">
+    <button onclick="unlock()">Masuk 💗</button>
+  </div>
 </div>
 
-<!-- STEP 2 -->
-<div class="card hidden" id="step2">
-  <h2>🔐 Secret Code</h2>
-  <p>Clue 6 angka:<br>Tanggal/Bulan/Tahun</p>
-  <input id="code" placeholder="contoh: 250825" style="padding:10px;width:100%;border-radius:12px;border:1px solid #ccc">
-  <br><br>
-  <button class="primary" onclick="checkCode()">Masuk 💗</button>
+<!-- PUZZLE -->
+<div class="screen" id="puzzle">
+  <div class="card">
+    <h2>🧩 Puzzle Time</h2>
+    <p>Geser potongan fotonya 💋</p>
+    <div class="puzzle" id="puzzleBox"></div>
+  </div>
 </div>
 
-<!-- STEP 3 PUZZLE -->
-<div class="card hidden" id="step3">
-  <h2>🧩 Puzzle Time</h2>
-  <p>Geser potongan fotonya 💋</p>
-  <div class="puzzle" id="puzzle"></div>
+<!-- LETTER -->
+<div class="screen" id="letter">
+  <div class="card">
+    <h2>I Love You 💖</h2>
+    <p id="text"></p>
+    <button onclick="ask()">Will you stay with me?</button>
+  </div>
 </div>
 
-<!-- STEP 4 LETTER -->
-<div class="card hidden" id="step4">
-  <h2>I Love You 💖</h2>
-  <p id="letter"></p>
-  <button class="primary" onclick="showEnding()">Will you stay with me?</button>
+<!-- END -->
+<div class="screen" id="end">
+  <div class="card">
+    <h2>💖 She Said YES!</h2>
+    <p>Hari ini, besok, dan seterusnya 🤍</p>
+    <button onclick="fadeOut()">Peluk Aku 🤍</button>
+  </div>
 </div>
 
-<!-- ENDING -->
-<div class="card hidden" id="ending">
-  <h2>💖 She Said YES!</h2>
-  <p>Hari ini, besok, dan seterusnya 🤍</p>
-  <button class="primary" onclick="finalScene()">Peluk Aku 🤍</button>
-</div>
+<div class="confetti" id="confetti"></div>
 
 <script>
-/* ===== NAV ===== */
-function go(n){
-  document.querySelectorAll('.card').forEach(c=>c.classList.add('hidden'));
-  document.getElementById('step'+n).classList.remove('hidden');
-}
+const screens=id=>document.getElementById(id);
+const music=document.getElementById("music");
 
-/* ===== MUSIC ===== */
-const music=document.getElementById('music');
-function toggleMusic(){
-  music.paused?music.play():music.pause();
-}
-
-/* ===== PASSWORD ===== */
-function checkCode(){
+/* UNLOCK */
+function unlock(){
   if(code.value==="250825"){
-    music.volume=1;
+    screens("lock").classList.remove("active");
+    screens("puzzle").classList.add("active");
     music.play();
-    go(3);
-    loadPuzzle();
-  }else alert("Clue-nya inget dong 😆");
-}
-
-/* ===== PUZZLE ===== */
-const images=[
-"foto1.jpeg","foto2.jpeg","foto3.jpeg",
-"foto4.jpeg","foto5.jpeg","foto6.jpeg",
-"foto7.jpeg","foto8.jpeg","foto9.jpeg"
-];
-let order=[],drag=null;
-
-function loadPuzzle(){
-  const grid=document.getElementById('puzzle');
-  grid.innerHTML="";
-  order=images.slice().sort(()=>Math.random()-0.5);
-
-  order.forEach((src,i)=>{
-    const img=document.createElement('img');
-    img.src=src;
-    img.draggable=true;
-
-    img.ondragstart=()=>drag=i;
-    img.ondragover=e=>e.preventDefault();
-    img.ondrop=e=>{
-      e.preventDefault();
-      [order[drag],order[i]]=[order[i],order[drag]];
-      render();
-      checkWin();
-    };
-    grid.appendChild(img);
-  });
-  render();
-}
-function render(){
-  document.querySelectorAll('.puzzle img').forEach((img,i)=>img.src=order[i]);
-}
-function checkWin(){
-  if(order.join()==images.join()){
-    setTimeout(()=>go(4),600);
-    typeLetter();
+    initPuzzle();
   }
 }
 
-/* ===== LETTER ===== */
-const text="Terima kasih sudah hadir dan bertahan bersamaku. Aku harap kita selalu saling memilih, di setiap hari yang datang 💗";
-let i=0;
-function typeLetter(){
-  const el=document.getElementById('letter');
-  el.innerHTML="";
-  i=0;
-  const t=setInterval(()=>{
-    el.innerHTML+=text[i++];
-    if(i>=text.length)clearInterval(t);
-  },40);
+/* PUZZLE */
+let order=[...Array(9).keys()].sort(()=>Math.random()-.5);
+let drag=null;
+
+function initPuzzle(){
+  puzzleBox.innerHTML="";
+  order.forEach(i=>{
+    let t=document.createElement("div");
+    t.className="tile";
+    t.style.backgroundPosition=`${(i%3)*50}% ${(~~(i/3))*50}%`;
+    t.draggable=true;
+    t.ondragstart=e=>drag=i;
+    t.ondragover=e=>e.preventDefault();
+    t.ondrop=e=>{
+      let a=order.indexOf(drag);
+      let b=order.indexOf(i);
+      [order[a],order[b]]=[order[b],order[a]];
+      initPuzzle();
+      if(order.every((v,i)=>v===i)){
+        setTimeout(()=>screens("puzzle").classList.remove("active")||
+        screens("letter").classList.add("active")||
+        typeText(),600);
+      }
+    }
+    puzzleBox.appendChild(t);
+  })
 }
 
-/* ===== ENDING ===== */
-function showEnding(){go('ending')}
-function finalScene(){
+/* TYPEWRITER */
+const msg="Terima kasih sudah hadir dan bertahan bersamaku.\nAku harap kita selalu saling memilih, di setiap hari yang datang 🤍";
+let i=0;
+function typeText(){
+  if(i<msg.length){
+    text.innerHTML+=msg[i]==="\n"?"<br>":msg[i];
+    i++; setTimeout(typeText,45);
+  }
+}
+
+/* ENDING */
+function ask(){
+  screens("letter").classList.remove("active");
+  screens("end").classList.add("active");
+  for(let i=0;i<80;i++){
+    let c=document.createElement("span");
+    c.style.left=Math.random()*100+"%";
+    c.style.setProperty("--h",Math.random()*360);
+    confetti.appendChild(c);
+  }
+}
+
+function fadeOut(){
   let v=music.volume;
-  const fade=setInterval(()=>{
-    v-=0.02;
-    music.volume=Math.max(v,0);
-    if(v<=0){music.pause();clearInterval(fade);}
-  },100);
-  document.body.innerHTML+='<div class="fadeBlack"></div>';
+  let f=setInterval(()=>{
+    v-=.05;
+    music.volume=v;
+    if(v<=0){clearInterval(f);music.pause();}
+  },200);
 }
 </script>
 </body>
