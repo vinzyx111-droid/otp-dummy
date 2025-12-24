@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Dummy OTP Farm By Jabrixx</title>
+<title>OTP Simulator</title>
 
 <style>
 /* ===== BASE ===== */
@@ -14,8 +13,12 @@ body {
   background: #0e1621;
   color: #e6e6e6;
 }
+body.light {
+  background: #f3f4f6;
+  color: #111827;
+}
 
-/* ===== MOBILE CONTAINER ===== */
+/* ===== CONTAINER ===== */
 .container {
   max-width: 480px;
   margin: 0 auto;
@@ -26,8 +29,14 @@ body {
 header {
   text-align: center;
   padding: 10px 0;
-  color: #58a6ff;
   font-weight: bold;
+  color: #58a6ff;
+}
+body.light header { color: #2563eb; }
+
+#themeBtn {
+  margin-top: 6px;
+  font-size: 13px;
 }
 
 /* ===== CARD ===== */
@@ -36,6 +45,9 @@ header {
   padding: 14px;
   margin-bottom: 12px;
   border-radius: 12px;
+}
+body.light .box {
+  background: #ffffff;
 }
 
 button {
@@ -49,25 +61,32 @@ button {
   font-weight: bold;
   font-size: 15px;
 }
-
-button:hover { background: #1f8ed6; }
-button:disabled { opacity: .5; cursor: not-allowed; }
+button:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+body.light button {
+  background: #2563eb;
+}
 
 select {
   width: 100%;
-  background: #0e1621;
-  color: #e6e6e6;
-  border: 1px solid #2a3b4d;
   padding: 10px;
   border-radius: 6px;
-  font-size: 15px;
+  border: 1px solid #2a3b4d;
+  background: #0e1621;
+  color: #e6e6e6;
+}
+body.light select {
+  background: #ffffff;
+  color: #111827;
+  border-color: #d1d5db;
 }
 
 .otp {
   font-size: 26px;
   color: #4ade80;
   letter-spacing: 4px;
-  margin-top: 6px;
 }
 
 /* ===== CHAT ===== */
@@ -96,11 +115,10 @@ select {
   align-items: center;
   justify-content: center;
   font-weight: bold;
-  font-size: 14px;
-  flex-shrink: 0;
 }
-
-.chat-right .avatar { background: #22c55e; }
+.chat-right .avatar {
+  background: #22c55e;
+}
 
 .bubble {
   background: #182533;
@@ -109,15 +127,31 @@ select {
   font-size: 13px;
   max-width: 75%;
 }
-
 .chat-right .bubble {
   background: #1f6feb;
   text-align: right;
 }
+body.light .bubble {
+  background: #e5e7eb;
+  color: #111827;
+}
+body.light .chat-right .bubble {
+  background: #bfdbfe;
+}
 
-/* ===== COUNTDOWN ===== */
+.typing {
+  font-style: italic;
+  color: #9ca3af;
+}
+
+.time {
+  display: block;
+  font-size: 11px;
+  color: #9ca3af;
+  margin-top: 4px;
+}
+
 #countdown {
-  margin-top: 6px;
   font-size: 13px;
   color: #9ca3af;
 }
@@ -128,18 +162,17 @@ select {
 <div class="container">
 
 <header>
-  Dummy OTP Farm By Jabrixx<br>
-  <small>100% DUMMY DATA</small>
+  OTP Simulator<br>
+  <small>100% Dummy</small><br>
+  <button id="themeBtn" onclick="toggleTheme()">🌙 Dark</button>
 </header>
 
 <div class="box">
-  <h3>Ambil Nomor</h3>
   <button onclick="getNumber()">Get Number</button>
   <p id="number"></p>
 </div>
 
 <div class="box">
-  <h3>Generate OTP</h3>
   <select id="service">
     <option value="WhatsApp">WhatsApp</option>
     <option value="Telegram">Telegram</option>
@@ -152,14 +185,13 @@ select {
 </div>
 
 <div class="box">
-  <h3>OTP Group Feed</h3>
   <ul id="feed"></ul>
 </div>
 
 </div>
 
-<!-- ================= JAVASCRIPT ================= -->
 <script>
+/* ===== DATA ===== */
 let dummyNumbers = [
   "+999811234567",
   "+888700000111",
@@ -167,73 +199,101 @@ let dummyNumbers = [
 ];
 let index = 0;
 let activeNumber = null;
-
 let cooldown = 5;
 let countdownTimer = null;
 
+/* ===== THEME ===== */
+function toggleTheme() {
+  document.body.classList.toggle("light");
+  let light = document.body.classList.contains("light");
+  localStorage.setItem("theme", light ? "light" : "dark");
+  document.getElementById("themeBtn").innerText =
+    light ? "☀️ Light" : "🌙 Dark";
+}
+(function(){
+  let saved = localStorage.getItem("theme");
+  if(saved === "light") {
+    document.body.classList.add("light");
+    document.getElementById("themeBtn").innerText = "☀️ Light";
+  }
+})();
+
+/* ===== STORAGE ===== */
+function saveFeed() {
+  localStorage.setItem("otpFeed", document.getElementById("feed").innerHTML);
+}
+function loadFeed() {
+  let saved = localStorage.getItem("otpFeed");
+  if(saved) document.getElementById("feed").innerHTML = saved;
+}
+loadFeed();
+
+/* ===== NUMBER ===== */
 function getNumber() {
   activeNumber = dummyNumbers[index];
-  document.getElementById("number").innerText =
-    "Nomor: " + activeNumber;
-
-  index++;
-  if (index >= dummyNumbers.length) index = 0;
+  document.getElementById("number").innerText = "Nomor: " + activeNumber;
+  index = (index + 1) % dummyNumbers.length;
 }
 
+/* ===== OTP ===== */
 function generateOTP() {
   if (countdownTimer) return;
-
   if (!activeNumber) {
     alert("Ambil nomor dulu");
     return;
   }
 
   let service = document.getElementById("service").value;
-  let otp = Math.floor(100000 + Math.random() * 900000);
-
-  document.getElementById("sms").innerText =
-    service + " verification code is " + otp;
-  document.getElementById("otp").innerText = otp;
-
-  let li = document.createElement("li");
-  let avatarLetter = service.charAt(0);
   let position = service === "WhatsApp" ? "chat-right" : "chat-left";
 
-  li.innerHTML = `
+  let typingLi = document.createElement("li");
+  typingLi.innerHTML = `
     <div class="chat-item ${position}">
-      <div class="avatar">${avatarLetter}</div>
-      <div class="bubble">
-        <b>${service}</b><br>
-        ${activeNumber}<br>
-        OTP: <b style="color:#4ade80">${otp}</b>
-      </div>
-    </div>
-  `;
-  document.getElementById("feed").appendChild(li);
+      <div class="avatar">${service[0]}</div>
+      <div class="bubble typing">${service} is typing...</div>
+    </div>`;
+  document.getElementById("feed").appendChild(typingLi);
+  typingLi.scrollIntoView({behavior:"smooth"});
 
-  li.scrollIntoView({ behavior: "smooth" });
+  setTimeout(() => {
+    typingLi.remove();
+    let otp = Math.floor(100000 + Math.random() * 900000);
+    let time = new Date().toLocaleTimeString().slice(0,5);
 
-  let timeLeft = cooldown;
-  let btn = document.getElementById("otpBtn");
-  let text = document.getElementById("countdown");
+    let li = document.createElement("li");
+    li.innerHTML = `
+      <div class="chat-item ${position}">
+        <div class="avatar">${service[0]}</div>
+        <div class="bubble">
+          <b>${service}</b><br>
+          ${activeNumber}<br>
+          OTP: <b style="color:#4ade80">${otp}</b>
+          <span class="time">${time}</span>
+        </div>
+      </div>`;
+    document.getElementById("feed").appendChild(li);
+    li.scrollIntoView({behavior:"smooth"});
+    saveFeed();
 
-  btn.disabled = true;
-  text.innerText = `Tunggu ${timeLeft} detik`;
-
-  countdownTimer = setInterval(() => {
-    timeLeft--;
+    let timeLeft = cooldown;
+    let btn = document.getElementById("otpBtn");
+    let text = document.getElementById("countdown");
+    btn.disabled = true;
     text.innerText = `Tunggu ${timeLeft} detik`;
 
-    if (timeLeft <= 0) {
-      clearInterval(countdownTimer);
-      countdownTimer = null;
-      btn.disabled = false;
-      text.innerText = "Siap generate OTP lagi";
-    }
-  }, 1000);
+    countdownTimer = setInterval(() => {
+      timeLeft--;
+      text.innerText = `Tunggu ${timeLeft} detik`;
+      if (timeLeft <= 0) {
+        clearInterval(countdownTimer);
+        countdownTimer = null;
+        btn.disabled = false;
+        text.innerText = "Siap generate OTP lagi";
+      }
+    }, 1000);
+  }, 1000 + Math.random()*1000);
 }
 </script>
 
 </body>
 </html>
-
