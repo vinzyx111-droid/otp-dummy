@@ -43,7 +43,7 @@
             border: 1px solid rgba(255, 255, 255, 0.18);
             padding: 30px;
             width: 90%;
-            max-width: 450px; /* Sedikit lebih lebar buat puzzle */
+            max-width: 450px;
             text-align: center;
             box-shadow: var(--shadow);
             color: #fff;
@@ -70,42 +70,32 @@
         }
         .btn:hover { transform: scale(1.05); background: #a00f38; }
 
-        /* --- STYLE KHUSUS PUZZLE --- */
+        /* PUZZLE STYLE */
         #puzzle-board {
-            width: 300px;
-            height: 300px;
-            margin: 0 auto 20px auto;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-template-rows: repeat(3, 1fr);
-            gap: 2px;
-            background: rgba(255,255,255,0.2);
-            padding: 5px;
-            border-radius: 10px;
+            width: 300px; height: 300px; margin: 0 auto 20px auto;
+            display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr);
+            gap: 2px; background: rgba(255,255,255,0.2); padding: 5px; border-radius: 10px;
         }
-
         .puzzle-piece {
-            background-image: url('foto1.jpeg'); /* FOTO UTAMA PUZZLE */
-            background-size: 300px 300px; /* Harus sama dengan ukuran board */
-            cursor: grab;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            transition: transform 0.2s;
+            background-image: url('foto1.jpeg'); /* FOTO PUZZLE */
+            background-size: 300px 300px; cursor: grab; border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: transform 0.2s;
         }
-        
-        .puzzle-piece.selected {
-            border: 2px solid #fff;
-            transform: scale(0.95);
-            opacity: 0.8;
-        }
+        .puzzle-piece.selected { border: 2px solid #fff; transform: scale(0.95); opacity: 0.8; }
 
-        /* Gallery Styles */
+        /* GALLERY STYLE */
         .gallery { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 10px; padding-bottom: 10px; scrollbar-width: none; }
         .gallery::-webkit-scrollbar { display: none; }
         .photo-card { flex: 0 0 100%; scroll-snap-align: center; border-radius: 15px; overflow: hidden; }
         .photo-card img { width: 100%; height: 300px; object-fit: cover; }
 
         .buttons-container { display: flex; justify-content: center; gap: 15px; margin-top: 20px; position: relative; height: 50px; }
+        
+        /* TIMER STYLE */
+        #love-timer {
+            font-size: 1rem; margin: 20px auto; background: rgba(255,255,255,0.2);
+            padding: 15px; border-radius: 15px; width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -129,10 +119,8 @@
 
         <div id="page3" class="page">
             <h2>Puzzle Time! 🧩</h2>
-            <p>Susun foto cantik ini ya! <br><small>(Drag atau Klik 2 kotak untuk tukar posisi)</small></p>
-            
+            <p>Susun foto ini ya! <small>(Drag atau Klik 2 kotak untuk tukar)</small></p>
             <div id="puzzle-board"></div>
-            
             <p id="puzzle-status" style="margin-top:10px; font-weight:bold; color:#ffeeb0;"></p>
         </div>
 
@@ -170,7 +158,14 @@
 
         <div id="page7" class="page">
             <h1>Yeay! Makasih Sayang! 🎉</h1>
-            <p>Makasih udah mau nemenin aku terus.</p>
+            <p>Aku beruntung banget punya kamu.</p>
+            
+            <div id="love-timer">
+                Kita sudah bersama selama:<br>
+                <b id="timer-display" style="font-size: 1.2rem;">Hitung waktu...</b>
+                <br>❤️
+            </div>
+
             <button class="btn" onclick="pelukAku()">Peluk Aku 🤗</button>
         </div>
     </div>
@@ -178,157 +173,95 @@
     <script>
         const secretCode = "250825";
         const textToType = "Hai kamu... Makasih ya udah jadi bagian terbaik dalam hidupku. Semoga kita bisa terus sama-sama ya. Love you! ❤️";
+        
+        // --- SET TANGGAL JADIAN DISINI (Format: YYYY-MM-DD) ---
+        // Saya set ke 25 Agustus 2025 sesuai kode kamu "250825"
+        const startDate = new Date("2025-08-25"); 
+        
         let audio = document.getElementById("musik");
-
-        // --- PUZZLE VARIABLES ---
         const puzzleBoard = document.getElementById('puzzle-board');
-        let pieces = [];
-        let selectedPiece = null;
+        let pieces = [], selectedPiece = null;
 
         function nextPage(id) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            if(id === 'page3') initPuzzle(); // Mulai puzzle saat halaman 3 aktif
+            if(id === 'page3') initPuzzle();
             if(id === 'page4') typeWriter();
+            if(id === 'page7') startTimer(); // Mulai timer di halaman akhir
         }
 
         function checkCode() {
             if(document.getElementById('passcode').value === secretCode) {
                 audio.play(); nextPage('page3');
-            } else {
-                alert("Kode Salah!");
-            }
+            } else { alert("Kode Salah!"); }
         }
 
-        // --- LOGIKA PUZZLE 3x3 (DRAG & CLICK SWAP) ---
+        // --- PUZZLE LOGIC ---
         function initPuzzle() {
-            puzzleBoard.innerHTML = "";
-            pieces = [];
-            // Buat urutan acak
-            let indices = [0, 1, 2, 3, 4, 5, 6, 7, 8];
-            indices.sort(() => Math.random() - 0.5); // Shuffle
-
-            indices.forEach((index, i) => {
+            puzzleBoard.innerHTML = ""; pieces = [];
+            let indices = [0, 1, 2, 3, 4, 5, 6, 7, 8].sort(() => Math.random() - 0.5);
+            indices.forEach((index) => {
                 const piece = document.createElement('div');
                 piece.classList.add('puzzle-piece');
                 piece.draggable = true;
-                
-                // Hitung posisi background berdasarkan index ASLI (gambar utuh)
-                // Grid 3x3: x bergerak 0%, 50%, 100%. y juga sama.
-                let row = Math.floor(index / 3);
-                let col = index % 3;
+                let row = Math.floor(index / 3), col = index % 3;
                 piece.style.backgroundPosition = `${col * 50}% ${row * 50}%`;
-                piece.dataset.id = index; // Simpan ID asli gambar
-
-                // Event Listeners buat Desktop (Drag)
+                piece.dataset.id = index;
                 piece.addEventListener('dragstart', dragStart);
-                piece.addEventListener('dragover', dragOver);
+                piece.addEventListener('dragover', e => e.preventDefault());
                 piece.addEventListener('drop', dragDrop);
-                
-                // Event Listeners buat HP (Click/Tap)
                 piece.addEventListener('click', () => clickSwap(piece));
-
-                puzzleBoard.appendChild(piece);
-                pieces.push(piece);
+                puzzleBoard.appendChild(piece); pieces.push(piece);
             });
         }
-
         let dragSrcEl = null;
-
-        function dragStart(e) {
-            dragSrcEl = this;
-            e.dataTransfer.effectAllowed = 'move';
+        function dragStart(e) { dragSrcEl = this; }
+        function dragDrop(e) { if(dragSrcEl !== this) swapPieces(dragSrcEl, this); }
+        function clickSwap(p) {
+            if(!selectedPiece) { selectedPiece = p; p.classList.add('selected'); }
+            else { swapPieces(selectedPiece, p); selectedPiece.classList.remove('selected'); selectedPiece = null; }
         }
-
-        function dragOver(e) {
-            if (e.preventDefault) e.preventDefault();
-            return false;
-        }
-
-        function dragDrop(e) {
-            if (dragSrcEl !== this) {
-                swapPieces(dragSrcEl, this);
-            }
-            return false;
-        }
-
-        // Fungsi Klik buat HP (Alternatif Drag)
-        function clickSwap(clickedPiece) {
-            if (!selectedPiece) {
-                selectedPiece = clickedPiece;
-                clickedPiece.classList.add('selected');
-            } else {
-                swapPieces(selectedPiece, clickedPiece);
-                selectedPiece.classList.remove('selected');
-                selectedPiece = null;
-            }
-        }
-
         function swapPieces(el1, el2) {
-            // Tukar Background Position
-            let tempBg = el1.style.backgroundPosition;
-            el1.style.backgroundPosition = el2.style.backgroundPosition;
-            el2.style.backgroundPosition = tempBg;
-
-            // Tukar Data ID buat cek kemenangan
-            let tempId = el1.dataset.id;
-            el1.dataset.id = el2.dataset.id;
-            el2.dataset.id = tempId;
-
+            let tempBg = el1.style.backgroundPosition, tempId = el1.dataset.id;
+            el1.style.backgroundPosition = el2.style.backgroundPosition; el1.dataset.id = el2.dataset.id;
+            el2.style.backgroundPosition = tempBg; el2.dataset.id = tempId;
             checkWin();
         }
-
         function checkWin() {
-            let currentOrder = Array.from(puzzleBoard.children).map(p => p.dataset.id);
-            // Cek apakah urutannya [0, 1, 2, 3, 4, 5, 6, 7, 8]
-            let isWin = currentOrder.every((val, index) => val == index);
-
-            if (isWin) {
+            if(Array.from(puzzleBoard.children).every((p, i) => p.dataset.id == i)) {
                 document.getElementById('puzzle-status').innerText = "Yeay! Sempurna! 🎉";
-                triggerConfetti();
-                setTimeout(() => {
-                    alert("Puzzle Berhasil Disusun! Lanjut yuk ❤️");
-                    nextPage('page4');
-                }, 1500);
+                triggerConfetti(); setTimeout(() => { alert("Puzzle Selesai! ❤️"); nextPage('page4'); }, 1500);
             }
         }
 
-        // --- TYPING EFFECT ---
+        // --- TYPING & BUTTONS ---
         let i = 0;
         function typeWriter() {
             const target = document.getElementById("typing-box");
             if(target.innerHTML === "") {
-                function type() {
-                    if (i < textToType.length) {
-                        target.innerHTML += textToType.charAt(i);
-                        i++;
-                        setTimeout(type, 50);
-                    }
-                }
+                function type() { if(i < textToType.length) { target.innerHTML += textToType.charAt(i); i++; setTimeout(type, 50); } }
                 type();
             }
         }
-
-        // --- TOMBOL NO & LAINNYA ---
         function pindahTombol() {
-            const btnNo = document.getElementById("btnNo");
-            btnNo.style.position = "fixed"; 
-            btnNo.style.left = Math.random() * (window.innerWidth - 100) + "px";
-            btnNo.style.top = Math.random() * (window.innerHeight - 100) + "px";
+            const btn = document.getElementById("btnNo");
+            btn.style.position = "fixed"; btn.style.left = Math.random()*(window.innerWidth-100)+"px"; btn.style.top = Math.random()*(window.innerHeight-100)+"px";
         }
+        function terimaCinta() { triggerConfetti(); triggerConfetti(); setTimeout(() => nextPage('page7'), 1000); }
+        function pelukAku() { alert("🤗 Peluk Eratt!! 🤗"); location.reload(); }
+        function triggerConfetti() { confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#ff8fa3', '#c9184a'] }); }
 
-        function terimaCinta() {
-            triggerConfetti(); triggerConfetti();
-            setTimeout(() => nextPage('page7'), 1000);
-        }
-
-        function pelukAku() {
-            alert("🤗 Peluk Eratt!! 🤗");
-            location.reload();
-        }
-
-        function triggerConfetti() {
-            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#ff8fa3', '#c9184a', '#fff'] });
+        // --- TIMER FUNCTION ---
+        function startTimer() {
+            setInterval(() => {
+                const now = new Date();
+                const diff = now - startDate;
+                const d = Math.floor(diff / (1000*60*60*24));
+                const h = Math.floor((diff / (1000*60*60)) % 24);
+                const m = Math.floor((diff / (1000*60)) % 60);
+                const s = Math.floor((diff / 1000) % 60);
+                document.getElementById("timer-display").innerText = `${d} Hari, ${h} Jam, ${m} Menit, ${s} Detik`;
+            }, 1000);
         }
     </script>
 </body>
