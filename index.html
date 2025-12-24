@@ -26,17 +26,31 @@ body.light {
 }
 
 /* ===== HEADER ===== */
-header {
-  text-align: center;
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #0e1621;
+  border-bottom: 1px solid #1f2937;
   padding: 10px 0;
-  font-weight: bold;
+  text-align: center;
+}
+body.light .app-header {
+  background: #f3f4f6;
+  border-bottom-color: #e5e7eb;
+}
+.app-header .title {
+  font-weight: 700;
   color: #58a6ff;
 }
-body.light header { color: #2563eb; }
-
-#themeBtn {
-  margin-top: 6px;
-  font-size: 13px;
+body.light .app-header .title { color: #2563eb; }
+.app-header .status {
+  font-size: 12px;
+  color: #9ca3af;
+  margin-bottom: 6px;
+}
+.app-header button {
+  margin: 2px;
 }
 
 /* ===== CARD ===== */
@@ -46,9 +60,7 @@ body.light header { color: #2563eb; }
   margin-bottom: 12px;
   border-radius: 12px;
 }
-body.light .box {
-  background: #ffffff;
-}
+body.light .box { background: #ffffff; }
 
 button {
   width: 100%;
@@ -59,15 +71,9 @@ button {
   border-radius: 8px;
   cursor: pointer;
   font-weight: bold;
-  font-size: 15px;
 }
-button:disabled {
-  opacity: .5;
-  cursor: not-allowed;
-}
-body.light button {
-  background: #2563eb;
-}
+button:disabled { opacity: .5; cursor: not-allowed; }
+body.light button { background: #2563eb; }
 
 select {
   width: 100%;
@@ -95,13 +101,11 @@ body.light select {
   padding: 0;
   margin: 0;
 }
-
 .chat-item {
   display: flex;
   gap: 8px;
   margin-bottom: 8px;
 }
-
 .chat-left { flex-direction: row; }
 .chat-right { flex-direction: row-reverse; }
 
@@ -116,9 +120,7 @@ body.light select {
   justify-content: center;
   font-weight: bold;
 }
-.chat-right .avatar {
-  background: #22c55e;
-}
+.chat-right .avatar { background: #22c55e; }
 
 .bubble {
   background: #182533;
@@ -135,14 +137,31 @@ body.light .bubble {
   background: #e5e7eb;
   color: #111827;
 }
-body.light .chat-right .bubble {
-  background: #bfdbfe;
+body.light .chat-right .bubble { background: #bfdbfe; }
+
+/* ===== TYPING DOTS ===== */
+.typing::after {
+  content: '';
+  animation: dots 1.2s infinite;
+}
+@keyframes dots {
+  0% { content: ''; }
+  33% { content: '.'; }
+  66% { content: '..'; }
+  100% { content: '...'; }
 }
 
-.typing {
-  font-style: italic;
-  color: #9ca3af;
+/* ===== BUBBLE ANIMATION ===== */
+@keyframes slideInLeft {
+  from { transform: translateX(-20px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
 }
+@keyframes slideInRight {
+  from { transform: translateX(20px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+.chat-left .bubble { animation: slideInLeft .25s ease-out; }
+.chat-right .bubble { animation: slideInRight .25s ease-out; }
 
 .time {
   display: block;
@@ -151,20 +170,35 @@ body.light .chat-right .bubble {
   margin-top: 4px;
 }
 
-#countdown {
-  font-size: 13px;
-  color: #9ca3af;
+/* ===== COUNTDOWN + PROGRESS ===== */
+#countdown { font-size: 13px; color: #9ca3af; }
+.progress-wrap {
+  width: 100%;
+  height: 6px;
+  background: #1f2937;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 6px;
 }
+#progressBar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #22c55e, #2ea6ff);
+  transition: width 1s linear;
+}
+body.light .progress-wrap { background: #e5e7eb; }
 </style>
 </head>
 
 <body>
 <div class="container">
 
-<header>
-  OTP Simulator<br>
-  <small>100% Dummy</small><br>
+<header class="app-header">
+  <div class="title">OTP Simulator</div>
+  <div class="status">online • simulation</div>
   <button id="themeBtn" onclick="toggleTheme()">🌙 Dark</button>
+  <button id="soundBtn" onclick="toggleSound()">🔊 Sound</button>
+  <button onclick="previewSound()">▶️ Preview</button>
 </header>
 
 <div class="box">
@@ -180,6 +214,7 @@ body.light .chat-right .bubble {
   <br><br>
   <button id="otpBtn" onclick="generateOTP()">Generate OTP</button>
   <p id="countdown"></p>
+  <div class="progress-wrap"><div id="progressBar"></div></div>
   <p id="sms"></p>
   <div id="otp" class="otp"></div>
 </div>
@@ -188,76 +223,90 @@ body.light .chat-right .bubble {
   <ul id="feed"></ul>
 </div>
 
+<!-- AUDIO -->
+<audio id="soundWA" preload="auto">
+  <source src="https://assets.mixkit.co/sfx/preview/mixkit-message-pop-alert-2354.mp3" type="audio/mpeg">
+</audio>
+<audio id="soundTG" preload="auto">
+  <source src="https://assets.mixkit.co/sfx/preview/mixkit-software-interface-start-2574.mp3" type="audio/mpeg">
+</audio>
+
 </div>
 
 <script>
 /* ===== DATA ===== */
-let dummyNumbers = [
-  "+999811234567",
-  "+888700000111",
-  "+777600009999"
-];
+let dummyNumbers = ["+999811234567","+888700000111","+777600009999"];
 let index = 0;
 let activeNumber = null;
+
+/* ===== COUNTDOWN ===== */
 let cooldown = 5;
 let countdownTimer = null;
 
 /* ===== THEME ===== */
-function toggleTheme() {
+function toggleTheme(){
   document.body.classList.toggle("light");
-  let light = document.body.classList.contains("light");
-  localStorage.setItem("theme", light ? "light" : "dark");
-  document.getElementById("themeBtn").innerText =
-    light ? "☀️ Light" : "🌙 Dark";
+  let l = document.body.classList.contains("light");
+  localStorage.setItem("theme", l?"light":"dark");
+  document.getElementById("themeBtn").innerText = l?"☀️ Light":"🌙 Dark";
 }
 (function(){
-  let saved = localStorage.getItem("theme");
-  if(saved === "light") {
+  if(localStorage.getItem("theme")==="light"){
     document.body.classList.add("light");
-    document.getElementById("themeBtn").innerText = "☀️ Light";
+    document.getElementById("themeBtn").innerText="☀️ Light";
   }
 })();
 
+/* ===== SOUND ===== */
+let soundEnabled = localStorage.getItem("sound")!=="off";
+function toggleSound(){
+  soundEnabled=!soundEnabled;
+  localStorage.setItem("sound", soundEnabled?"on":"off");
+  document.getElementById("soundBtn").innerText = soundEnabled?"🔊 Sound":"🔇 Sound";
+}
+function playSound(service){
+  if(!soundEnabled) return;
+  let a = service==="WhatsApp"?soundWA:soundTG;
+  a.currentTime=0; a.play().catch(()=>{});
+}
+function previewSound(){
+  playSound(document.getElementById("service").value);
+}
+
 /* ===== STORAGE ===== */
-function saveFeed() {
-  localStorage.setItem("otpFeed", document.getElementById("feed").innerHTML);
-}
-function loadFeed() {
-  let saved = localStorage.getItem("otpFeed");
-  if(saved) document.getElementById("feed").innerHTML = saved;
-}
-loadFeed();
+function saveFeed(){ localStorage.setItem("otpFeed", feed.innerHTML); }
+(function(){
+  let s = localStorage.getItem("otpFeed");
+  if(s) feed.innerHTML = s;
+})();
 
 /* ===== NUMBER ===== */
-function getNumber() {
+function getNumber(){
   activeNumber = dummyNumbers[index];
-  document.getElementById("number").innerText = "Nomor: " + activeNumber;
-  index = (index + 1) % dummyNumbers.length;
+  number.innerText = "Nomor: "+activeNumber;
+  index = (index+1)%dummyNumbers.length;
 }
 
-/* ===== OTP ===== */
-function generateOTP() {
-  if (countdownTimer) return;
-  if (!activeNumber) {
-    alert("Ambil nomor dulu");
-    return;
-  }
+/* ===== CORE OTP ===== */
+function generateOTP(auto=false){
+  if(countdownTimer && !auto) return;
+  if(!activeNumber) return;
 
-  let service = document.getElementById("service").value;
-  let position = service === "WhatsApp" ? "chat-right" : "chat-left";
+  let service = auto ? (Math.random()>0.5?"WhatsApp":"Telegram") : serviceSel.value;
+  let position = service==="WhatsApp"?"chat-right":"chat-left";
 
-  let typingLi = document.createElement("li");
-  typingLi.innerHTML = `
+  let typing = document.createElement("li");
+  typing.innerHTML = `
     <div class="chat-item ${position}">
       <div class="avatar">${service[0]}</div>
-      <div class="bubble typing">${service} is typing...</div>
+      <div class="bubble typing">${service} is typing</div>
     </div>`;
-  document.getElementById("feed").appendChild(typingLi);
-  typingLi.scrollIntoView({behavior:"smooth"});
+  feed.appendChild(typing);
+  typing.scrollIntoView({behavior:"smooth"});
 
-  setTimeout(() => {
-    typingLi.remove();
-    let otp = Math.floor(100000 + Math.random() * 900000);
+  setTimeout(()=>{
+    typing.remove();
+    let otp = Math.floor(100000+Math.random()*900000);
     let time = new Date().toLocaleTimeString().slice(0,5);
 
     let li = document.createElement("li");
@@ -271,28 +320,45 @@ function generateOTP() {
           <span class="time">${time}</span>
         </div>
       </div>`;
-    document.getElementById("feed").appendChild(li);
+    feed.appendChild(li);
     li.scrollIntoView({behavior:"smooth"});
+    playSound(service);
     saveFeed();
 
-    let timeLeft = cooldown;
-    let btn = document.getElementById("otpBtn");
-    let text = document.getElementById("countdown");
-    btn.disabled = true;
-    text.innerText = `Tunggu ${timeLeft} detik`;
-
-    countdownTimer = setInterval(() => {
-      timeLeft--;
-      text.innerText = `Tunggu ${timeLeft} detik`;
-      if (timeLeft <= 0) {
-        clearInterval(countdownTimer);
-        countdownTimer = null;
-        btn.disabled = false;
-        text.innerText = "Siap generate OTP lagi";
-      }
-    }, 1000);
-  }, 1000 + Math.random()*1000);
+    if(!auto){
+      let t=cooldown, bar=progressBar;
+      otpBtn.disabled=true; bar.style.width="100%";
+      countdown.innerText=`Tunggu ${t} detik`;
+      countdownTimer=setInterval(()=>{
+        t--; bar.style.width=(t/cooldown*100)+"%";
+        countdown.innerText=`Tunggu ${t} detik`;
+        if(t<=0){
+          clearInterval(countdownTimer);
+          countdownTimer=null;
+          otpBtn.disabled=false;
+          countdown.innerText="Siap generate OTP lagi";
+          bar.style.width="0%";
+        }
+      },1000);
+    }
+  },1000+Math.random()*1000);
 }
+
+/* ===== AUTO ACTIVITY (FAKE REAL-TIME) ===== */
+setInterval(()=>{
+  if(Math.random()<0.35){
+    if(!activeNumber) getNumber();
+    generateOTP(true);
+  }
+},6000);
+
+/* ===== SHORTCUTS ===== */
+const feed=document.getElementById("feed");
+const number=document.getElementById("number");
+const serviceSel=document.getElementById("service");
+const otpBtn=document.getElementById("otpBtn");
+const countdown=document.getElementById("countdown");
+const progressBar=document.getElementById("progressBar");
 </script>
 
 </body>
