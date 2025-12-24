@@ -2,330 +2,251 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>For My Love 💖</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hello My Love 💖</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap" rel="stylesheet">
 
 <style>
 *{box-sizing:border-box}
-body{
+html,body{
   margin:0;
-  font-family:'Poppins',sans-serif;
+  padding:0;
+  font-family:'Comic Neue',cursive;
   overflow-x:hidden;
   background:#000;
 }
 
-/* 🌸 FLOATING PARALLAX BACKGROUND */
-.bg{
+body{
+  overscroll-behavior:none;
+}
+
+/* ===== PARALLAX BACKGROUND ===== */
+.parallax{
   position:fixed;
   inset:0;
-  overflow:hidden;
-  z-index:-5;
+  background:
+    radial-gradient(circle at 20% 20%, #ffd6e8, transparent 40%),
+    radial-gradient(circle at 80% 30%, #ffb3d9, transparent 40%),
+    radial-gradient(circle at 50% 80%, #ffcce0, transparent 45%);
+  background-size:200% 200%;
+  animation:moveBg 20s infinite alternate;
+  z-index:-1;
 }
-.blob{
-  position:absolute;
-  width:300px;
-  height:300px;
-  background:radial-gradient(circle,#ffd6e6,#ff9bb8);
-  border-radius:50%;
-  filter:blur(80px);
-  opacity:.7;
-  animation:float 40s infinite alternate ease-in-out;
-}
-.blob.b1{top:10%;left:10%;animation-duration:45s}
-.blob.b2{top:60%;left:70%;animation-duration:50s}
-.blob.b3{top:30%;left:50%;animation-duration:55s}
-
-@keyframes float{
-  from{transform:translateY(-40px) translateX(-30px)}
-  to{transform:translateY(40px) translateX(30px)}
+@keyframes moveBg{
+  from{background-position:0% 0%}
+  to{background-position:100% 100%}
 }
 
-/* CINEMATIC FADE */
-#fade{
-  position:fixed;
-  inset:0;
-  background:#000;
-  opacity:0;
-  pointer-events:none;
-  transition:1.5s;
-  z-index:10;
-}
-
-/* PAGE */
-.page{
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-}
+/* ===== CARD ===== */
 .card{
-  background:#fff;
-  width:100%;
-  max-width:420px;
-  padding:26px;
-  border-radius:26px;
-  box-shadow:0 20px 40px rgba(0,0,0,.15);
+  max-width:360px;
+  margin:60px auto;
+  background:white;
+  border-radius:24px;
+  padding:24px;
+  box-shadow:0 20px 40px rgba(0,0,0,.2);
   text-align:center;
-  animation:fadeIn .7s ease;
+  animation:fadeIn .8s ease;
 }
-.hidden{display:none}
 @keyframes fadeIn{
   from{opacity:0;transform:translateY(20px)}
-  to{opacity:1}
+  to{opacity:1;transform:none}
 }
 
-h1,h2{font-family:'Patrick Hand',cursive}
-h1{font-size:34px}
+.hidden{display:none}
+
 button{
   border:none;
-  padding:14px 24px;
+  padding:12px 24px;
   border-radius:999px;
   font-size:16px;
   cursor:pointer;
-  margin:8px;
 }
-.primary{background:#ff7aa2;color:#fff}
-.outline{background:#fff;border:2px solid #ff7aa2;color:#ff7aa2}
-input{
-  width:100%;
-  padding:14px;
-  border-radius:14px;
-  border:1px solid #ddd;
-  font-size:16px;
-  text-align:center;
-}
+.primary{background:#ff7aa8;color:white}
+.outline{background:none;border:2px solid #ff7aa8;color:#ff7aa8}
 
-/* 🎵 MUSIC */
-#musicBtn{
+.musicBtn{
   position:fixed;
-  right:18px;
-  bottom:18px;
+  bottom:20px;
+  right:20px;
   width:56px;
   height:56px;
   border-radius:50%;
-  background:#ff7aa2;
-  color:#fff;
+  background:#ff7aa8;
+  color:white;
   font-size:22px;
-  z-index:20;
 }
 
-/* 🧩 PUZZLE — SWIPE */
+/* ===== PUZZLE ===== */
 .puzzle{
   display:grid;
   grid-template-columns:repeat(3,1fr);
   gap:6px;
   margin-top:16px;
 }
-.tile{
-  aspect-ratio:1/1;
-  background-size:300% 300%;
-  border-radius:14px;
+.puzzle img{
+  width:100%;
+  border-radius:12px;
+  cursor:grab;
   touch-action:none;
+  transition:transform .2s;
 }
+.puzzle img:active{cursor:grabbing;transform:scale(.95)}
 
-/* 🎉 CONFETTI */
-canvas{
+.confetti{
   position:fixed;
   inset:0;
   pointer-events:none;
-  z-index:15;
+  z-index:10;
 }
 
-/* 💌 LETTER */
-.type{
-  white-space:pre-line;
-  font-size:16px;
-  line-height:1.7;
+/* ===== ENDING ===== */
+.fadeBlack{
+  position:fixed;
+  inset:0;
+  background:black;
+  animation:fadeBlack 3s forwards;
+  z-index:20;
+}
+@keyframes fadeBlack{
+  from{opacity:0}
+  to{opacity:1}
 }
 </style>
 </head>
 
 <body>
+<div class="parallax"></div>
 
-<!-- BACKGROUND -->
-<div class="bg">
-  <div class="blob b1"></div>
-  <div class="blob b2"></div>
-  <div class="blob b3"></div>
+<audio id="music" src="lagu-lagi.mp3" loop></audio>
+
+<button class="musicBtn" onclick="toggleMusic()">🎵</button>
+
+<!-- STEP 1 -->
+<div class="card" id="step1">
+  <h2>Hello My Love 💖</h2>
+  <p>Do you want to see your gift?</p>
+  <button class="primary" onclick="go(2)">YES PLEASE</button><br><br>
+  <button class="outline" onclick="alert('Ayoo jangan gitu 😭')">NO THANKS</button>
 </div>
 
-<div id="fade"></div>
-<canvas id="confetti"></canvas>
-
-<audio id="bgm" loop>
-  <source src="lagu-lagi.mp3" type="audio/mpeg">
-</audio>
-<button id="musicBtn" onclick="toggleMusic()">🎵</button>
-
-<!-- PAGE 1 -->
-<div class="page" id="start">
-  <div class="card">
-    <h1>Hello My Love 💖</h1>
-    <p>Do you want to see your gift?</p>
-    <button class="primary" onclick="go('code')">YES PLEASE</button>
-    <button class="outline" onclick="alert('Coba YES dulu ya 🥺')">NO THANKS</button>
-  </div>
+<!-- STEP 2 -->
+<div class="card hidden" id="step2">
+  <h2>🔐 Secret Code</h2>
+  <p>Clue 6 angka:<br>Tanggal/Bulan/Tahun</p>
+  <input id="code" placeholder="contoh: 250825" style="padding:10px;width:100%;border-radius:12px;border:1px solid #ccc">
+  <br><br>
+  <button class="primary" onclick="checkCode()">Masuk 💗</button>
 </div>
 
-<!-- CODE -->
-<div class="page hidden" id="code">
-  <div class="card">
-    <h2>🔐 Secret Code</h2>
-    <p>Clue 6 angka</p>
-    <input id="pass" placeholder="tanggal / bulan / tahun">
-    <button class="primary" onclick="checkCode()">Masuk 💗</button>
-  </div>
+<!-- STEP 3 PUZZLE -->
+<div class="card hidden" id="step3">
+  <h2>🧩 Puzzle Time</h2>
+  <p>Geser potongan fotonya 💋</p>
+  <div class="puzzle" id="puzzle"></div>
 </div>
 
-<!-- PUZZLE -->
-<div class="page hidden" id="puzzlePage">
-  <div class="card">
-    <h2>🧩 Puzzle Time</h2>
-    <p>Geser potongan fotonya 💋</p>
-    <div class="puzzle" id="puzzle"></div>
-  </div>
+<!-- STEP 4 LETTER -->
+<div class="card hidden" id="step4">
+  <h2>I Love You 💖</h2>
+  <p id="letter"></p>
+  <button class="primary" onclick="showEnding()">Will you stay with me?</button>
 </div>
 
-<!-- LOVE -->
-<div class="page hidden" id="love">
-  <div class="card">
-    <h2>I Love You 💖</h2>
-    <p id="count"></p>
-    <img src="p5.jpg" style="width:100%;border-radius:16px">
-    <button class="primary" onclick="go('yes')">Will you stay with me?</button>
-  </div>
-</div>
-
-<!-- YES -->
-<div class="page hidden" id="yes">
-  <div class="card">
-    <h2>💖 She Said YES!</h2>
-    <button class="primary" onclick="ending()">Peluk Aku 🤍</button>
-  </div>
+<!-- ENDING -->
+<div class="card hidden" id="ending">
+  <h2>💖 She Said YES!</h2>
+  <p>Hari ini, besok, dan seterusnya 🤍</p>
+  <button class="primary" onclick="finalScene()">Peluk Aku 🤍</button>
 </div>
 
 <script>
-/* NAV */
-function go(id){
-  document.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));
-  document.getElementById(id).classList.remove('hidden');
+/* ===== NAV ===== */
+function go(n){
+  document.querySelectorAll('.card').forEach(c=>c.classList.add('hidden'));
+  document.getElementById('step'+n).classList.remove('hidden');
 }
 
-/* MUSIC */
-const bgm=document.getElementById('bgm');
-function toggleMusic(){ bgm.paused?bgm.play():bgm.pause(); }
+/* ===== MUSIC ===== */
+const music=document.getElementById('music');
+function toggleMusic(){
+  music.paused?music.play():music.pause();
+}
 
-/* PASSWORD */
+/* ===== PASSWORD ===== */
 function checkCode(){
-  if(pass.value==="250825"){
-    bgm.volume=0.9; bgm.play();
-    go('puzzlePage');
-    initPuzzle();
-  }else alert('Salah 😜');
+  if(code.value==="250825"){
+    music.volume=1;
+    music.play();
+    go(3);
+    loadPuzzle();
+  }else alert("Clue-nya inget dong 😆");
 }
 
-/* PUZZLE SWIPE */
-const puzzle=document.getElementById('puzzle');
-let order=[...Array(9).keys()].sort(()=>Math.random()-0.5);
-let active=null;
+/* ===== PUZZLE ===== */
+const images=[
+"foto1.jpeg","foto2.jpeg","foto3.jpeg",
+"foto4.jpeg","foto5.jpeg","foto6.jpeg",
+"foto7.jpeg","foto8.jpeg","foto9.jpeg"
+];
+let order=[],drag=null;
 
-function initPuzzle(){
-  puzzle.innerHTML='';
-  order.forEach(i=>{
-    const t=document.createElement('div');
-    t.className='tile';
-    t.dataset.id=i;
-    t.style.backgroundImage=`url(p${i+1}.jpg)`;
-    t.addEventListener('touchstart',()=>active=t);
-    t.addEventListener('touchend',e=>{
-      const target=document.elementFromPoint(
-        e.changedTouches[0].clientX,
-        e.changedTouches[0].clientY
-      );
-      if(target && target.classList.contains('tile') && target!==active){
-        swap(active,target);
-      }
-      active=null;
-    });
-    puzzle.appendChild(t);
+function loadPuzzle(){
+  const grid=document.getElementById('puzzle');
+  grid.innerHTML="";
+  order=images.slice().sort(()=>Math.random()-0.5);
+
+  order.forEach((src,i)=>{
+    const img=document.createElement('img');
+    img.src=src;
+    img.draggable=true;
+
+    img.ondragstart=()=>drag=i;
+    img.ondragover=e=>e.preventDefault();
+    img.ondrop=e=>{
+      e.preventDefault();
+      [order[drag],order[i]]=[order[i],order[drag]];
+      render();
+      checkWin();
+    };
+    grid.appendChild(img);
   });
+  render();
 }
-
-function swap(a,b){
-  [a.style.backgroundImage,b.style.backgroundImage]=
-  [b.style.backgroundImage,a.style.backgroundImage];
-  [a.dataset.id,b.dataset.id]=[b.dataset.id,a.dataset.id];
-  checkPuzzle();
+function render(){
+  document.querySelectorAll('.puzzle img').forEach((img,i)=>img.src=order[i]);
 }
-
-function checkPuzzle(){
-  const ok=[...puzzle.children].every((t,i)=>+t.dataset.id===i);
-  if(ok){
-    startConfetti();
-    setTimeout(()=>go('love'),800);
+function checkWin(){
+  if(order.join()==images.join()){
+    setTimeout(()=>go(4),600);
+    typeLetter();
   }
 }
 
-/* COUNTDOWN */
-const d=new Date(2025,7,25);
-count.innerText=`💞 ${Math.floor((d-new Date())/86400000)} hari menuju hari jadian kita 💞`;
-
-/* ENDING */
-function ending(){
-  fade.style.opacity=.6;
-  let v=bgm.volume;
-  const f=setInterval(()=>{
-    v-=.05; bgm.volume=Math.max(0,v);
-    if(v<=0){ clearInterval(f); bgm.pause(); }
-  },120);
-  setTimeout(showLetter,1500);
+/* ===== LETTER ===== */
+const text="Terima kasih sudah hadir dan bertahan bersamaku. Aku harap kita selalu saling memilih, di setiap hari yang datang 💗";
+let i=0;
+function typeLetter(){
+  const el=document.getElementById('letter');
+  el.innerHTML="";
+  i=0;
+  const t=setInterval(()=>{
+    el.innerHTML+=text[i++];
+    if(i>=text.length)clearInterval(t);
+  },40);
 }
 
-/* LETTER */
-function showLetter(){
-  document.querySelectorAll('.page').forEach(p=>p.remove());
-  const box=document.createElement('div');
-  box.className='page';
-  box.innerHTML=`
-    <div class="card">
-      <h2>💌 My Promise</h2>
-      <p class="type" id="t"></p>
-    </div>`;
-  document.body.appendChild(box);
-
-  const text=`Terima kasih sudah memilihku.
-Aku akan memilihmu,
-hari ini,
-besok,
-dan seterusnya 🤍`;
-  let i=0;
-  const t=document.getElementById('t');
-  const typing=setInterval(()=>{
-    t.innerHTML+=text[i++];
-    if(i>=text.length) clearInterval(typing);
-  },45);
-}
-
-/* CONFETTI */
-const c=document.getElementById('confetti'),ctx=c.getContext('2d');
-let conf=[];
-function startConfetti(){
-  c.width=innerWidth;c.height=innerHeight;
-  for(let i=0;i<120;i++) conf.push({x:Math.random()*c.width,y:-20,r:6,s:2+Math.random()*3});
-  requestAnimationFrame(draw);
-}
-function draw(){
-  ctx.clearRect(0,0,c.width,c.height);
-  conf.forEach(p=>{
-    ctx.fillStyle=`hsl(${Math.random()*360},80%,60%)`;
-    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
-    p.y+=p.s;
-  });
-  conf=conf.filter(p=>p.y<c.height+20);
-  if(conf.length) requestAnimationFrame(draw);
+/* ===== ENDING ===== */
+function showEnding(){go('ending')}
+function finalScene(){
+  let v=music.volume;
+  const fade=setInterval(()=>{
+    v-=0.02;
+    music.volume=Math.max(v,0);
+    if(v<=0){music.pause();clearInterval(fade);}
+  },100);
+  document.body.innerHTML+='<div class="fadeBlack"></div>';
 }
 </script>
 </body>
