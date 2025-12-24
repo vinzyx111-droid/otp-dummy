@@ -1,257 +1,335 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>For My Love ❤️</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Special Gift For You</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        :root {
+            --primary: #ff8fa3;
+            --secondary: #c9184a;
+            --bg-glass: rgba(255, 255, 255, 0.3);
+            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
 
-<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{
-  font-family:'Patrick Hand',cursive;
-  overflow:hidden;
-  background:#000;
-}
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab, #ffafbd);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
 
-/* PARALLAX */
-.parallax{
-  position:fixed;
-  inset:0;
-  background:linear-gradient(120deg,#ffb6c1,#ffc0cb,#ffdde1);
-  background-size:400% 400%;
-  animation:bgMove 18s ease infinite;
-  z-index:-2;
-}
-@keyframes bgMove{
-  0%{background-position:0% 50%}
-  50%{background-position:100% 50%}
-  100%{background-position:0% 50%}
-}
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
 
-.screen{
-  position:absolute;
-  inset:0;
-  display:none;
-  align-items:center;
-  justify-content:center;
-}
-.screen.active{display:flex}
+        .container {
+            background: var(--bg-glass);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            padding: 30px;
+            width: 90%;
+            max-width: 450px; /* Sedikit lebih lebar buat puzzle */
+            text-align: center;
+            box-shadow: var(--shadow);
+            color: #fff;
+            position: relative;
+        }
 
-.card{
-  background:#fff;
-  width:90%;
-  max-width:380px;
-  border-radius:24px;
-  padding:24px;
-  text-align:center;
-  box-shadow:0 20px 50px rgba(0,0,0,.3);
-}
+        h1, h2 { font-family: 'Dancing Script', cursive; margin-bottom: 15px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+        h1 { font-size: 2.2rem; }
+        p { margin-bottom: 20px; font-size: 0.9rem; }
 
-button{
-  border:none;
-  padding:12px 22px;
-  border-radius:30px;
-  font-family:inherit;
-  font-size:18px;
-  background:#ff7aa2;
-  color:#fff;
-  margin-top:15px;
-}
+        .page { display: none; animation: fadeIn 0.8s ease; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-input{
-  width:100%;
-  padding:12px;
-  font-size:18px;
-  border-radius:12px;
-  border:2px solid #ddd;
-  margin-top:10px;
-}
+        input {
+            padding: 12px; border-radius: 50px; border: none; outline: none; text-align: center;
+            width: 80%; margin-bottom: 20px; background: rgba(255,255,255,0.8); color: #333;
+        }
 
-/* PUZZLE */
-.puzzle{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:6px;
-  margin-top:15px;
-}
-.tile{
-  width:100%;
-  aspect-ratio:1;
-  background-image:url('foto1.jpeg');
-  background-size:300% 300%;
-  border-radius:12px;
-  cursor:grab;
-  transition:transform .15s;
-}
-.tile:active{transform:scale(.95)}
+        .btn {
+            background: var(--secondary); color: white; padding: 10px 25px; border-radius: 50px;
+            border: none; cursor: pointer; font-weight: 600; transition: transform 0.2s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .btn:hover { transform: scale(1.05); background: #a00f38; }
 
-.hidden{display:none}
+        /* --- STYLE KHUSUS PUZZLE --- */
+        #puzzle-board {
+            width: 300px;
+            height: 300px;
+            margin: 0 auto 20px auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 2px;
+            background: rgba(255,255,255,0.2);
+            padding: 5px;
+            border-radius: 10px;
+        }
 
-/* CONFETTI */
-.confetti{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-}
-.confetti span{
-  position:absolute;
-  width:8px;
-  height:8px;
-  background:hsl(var(--h),80%,60%);
-  animation:fall 3s linear infinite;
-}
-@keyframes fall{
-  from{transform:translateY(-10px)}
-  to{transform:translateY(110vh)}
-}
-/* ===== PATCH: BACKGROUND GERAK (LOCK) ===== */
-.bg-animated{
-  position:fixed;
-  inset:0;
-  background:
-    linear-gradient(
-      120deg,
-      #ffb6c1,
-      #ffc0cb,
-      #ffdde1,
-      #ffe6ee
-    );
-  background-size:400% 400%;
-  animation:bgMoveFix 20s ease infinite;
-  z-index:-5;
-  pointer-events:none;
-}
+        .puzzle-piece {
+            background-image: url('foto1.jpeg'); /* FOTO UTAMA PUZZLE */
+            background-size: 300px 300px; /* Harus sama dengan ukuran board */
+            cursor: grab;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+        
+        .puzzle-piece.selected {
+            border: 2px solid #fff;
+            transform: scale(0.95);
+            opacity: 0.8;
+        }
 
-@keyframes bgMoveFix{
-  0%{background-position:0% 50%}
-  50%{background-position:100% 50%}
-  100%{background-position:0% 50%}
-}
+        /* Gallery Styles */
+        .gallery { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 10px; padding-bottom: 10px; scrollbar-width: none; }
+        .gallery::-webkit-scrollbar { display: none; }
+        .photo-card { flex: 0 0 100%; scroll-snap-align: center; border-radius: 15px; overflow: hidden; }
+        .photo-card img { width: 100%; height: 300px; object-fit: cover; }
 
-</style>
+        .buttons-container { display: flex; justify-content: center; gap: 15px; margin-top: 20px; position: relative; height: 50px; }
+    </style>
 </head>
-
 <body>
-<div class="bg-animated"></div>
 
-<div class="parallax"></div>
+    <audio id="musik" loop><source src="lagu-lagi.mp3" type="audio/mpeg"></audio>
 
-<audio id="music" src="lagu-lagi.mp3" loop></audio>
+    <div class="container">
+        <div id="page1" class="page active">
+            <h1>Hi, This is a gift for you ❤️</h1>
+            <p>Ada sesuatu spesial yang ingin aku tunjukkan.</p>
+            <button class="btn" onclick="nextPage('page2')">Buka Kado 🎁</button>
+        </div>
 
-<!-- PASSWORD -->
-<div class="screen active" id="lock">
-  <div class="card">
-    <h2>🔒 Secret Code</h2>
-    <p>Clue 6 angka:<br>Tanggal/Bulan/Tahun</p>
-    <input id="code" placeholder="contoh: 250825">
-    <button onclick="unlock()">Masuk 💗</button>
-  </div>
-</div>
+        <div id="page2" class="page">
+            <h2>Masukkan Kode Rahasia</h2>
+            <p>Clue: 250825</p>
+            <input type="password" id="passcode" placeholder="Kode...">
+            <br>
+            <button class="btn" onclick="checkCode()">Unlock 🔓</button>
+        </div>
 
-<!-- PUZZLE -->
-<div class="screen" id="puzzle">
-  <div class="card">
-    <h2>🧩 Puzzle Time</h2>
-    <p>Geser potongan fotonya 💋</p>
-    <div class="puzzle" id="puzzleBox"></div>
-  </div>
-</div>
+        <div id="page3" class="page">
+            <h2>Puzzle Time! 🧩</h2>
+            <p>Susun foto cantik ini ya! <br><small>(Drag atau Klik 2 kotak untuk tukar posisi)</small></p>
+            
+            <div id="puzzle-board"></div>
+            
+            <p id="puzzle-status" style="margin-top:10px; font-weight:bold; color:#ffeeb0;"></p>
+        </div>
 
-<!-- LETTER -->
-<div class="screen" id="letter">
-  <div class="card">
-    <h2>I Love You 💖</h2>
-    <p id="text"></p>
-    <button onclick="ask()">Will you stay with me?</button>
-  </div>
-</div>
+        <div id="page4" class="page">
+            <h2>For You, My Dear</h2>
+            <div id="typing-box" style="text-align: left; min-height: 120px; font-size: 0.9rem; margin-bottom:15px;"></div>
+            <button class="btn" onclick="nextPage('page5')">Lihat Kenangan 📸</button>
+        </div>
 
-<!-- END -->
-<div class="screen" id="end">
-  <div class="card">
-    <h2>💖 She Said YES!</h2>
-    <p>Hari ini, besok, dan seterusnya 🤍</p>
-    <button onclick="fadeOut()">Peluk Aku 🤍</button>
-  </div>
-</div>
+        <div id="page5" class="page">
+            <h2>Our Memories</h2>
+            <div class="gallery">
+                <div class="photo-card"><img src="foto1.jpeg" alt="1"></div>
+                <div class="photo-card"><img src="foto2.jpeg" alt="2"></div>
+                <div class="photo-card"><img src="foto3.jpeg" alt="3"></div>
+                <div class="photo-card"><img src="foto4.jpeg" alt="4"></div>
+                <div class="photo-card"><img src="foto5.jpeg" alt="5"></div>
+                <div class="photo-card"><img src="foto6.jpeg" alt="6"></div>
+                <div class="photo-card"><img src="foto7.jpeg" alt="7"></div>
+                <div class="photo-card"><img src="foto8.jpeg" alt="8"></div>
+                <div class="photo-card"><img src="foto9.jpeg" alt="9"></div>
+                <div class="photo-card"><img src="foto10.jpeg" alt="10"></div>
+                <div class="photo-card"><img src="foto11.jpeg" alt="11"></div>
+            </div>
+            <br><button class="btn" onclick="nextPage('page6')">Next ❤️</button>
+        </div>
 
-<div class="confetti" id="confetti"></div>
+        <div id="page6" class="page">
+            <h2>Will You Stay With Me?</h2>
+            <div class="buttons-container">
+                <button class="btn" onclick="terimaCinta()">YES, I WILL! 💖</button>
+                <button class="btn" id="btnNo" onmouseover="pindahTombol()" style="position: absolute;">NO ☹️</button>
+            </div>
+        </div>
 
-<script>
-const screens=id=>document.getElementById(id);
-const music=document.getElementById("music");
+        <div id="page7" class="page">
+            <h1>Yeay! Makasih Sayang! 🎉</h1>
+            <p>Makasih udah mau nemenin aku terus.</p>
+            <button class="btn" onclick="pelukAku()">Peluk Aku 🤗</button>
+        </div>
+    </div>
 
-/* UNLOCK */
-function unlock(){
-  if(code.value==="250825"){
-    screens("lock").classList.remove("active");
-    screens("puzzle").classList.add("active");
-    music.play();
-    initPuzzle();
-  }
-}
+    <script>
+        const secretCode = "250825";
+        const textToType = "Hai kamu... Makasih ya udah jadi bagian terbaik dalam hidupku. Semoga kita bisa terus sama-sama ya. Love you! ❤️";
+        let audio = document.getElementById("musik");
 
-/* PUZZLE */
-let order=[...Array(9).keys()].sort(()=>Math.random()-.5);
-let drag=null;
+        // --- PUZZLE VARIABLES ---
+        const puzzleBoard = document.getElementById('puzzle-board');
+        let pieces = [];
+        let selectedPiece = null;
 
-function initPuzzle(){
-  puzzleBox.innerHTML="";
-  order.forEach(i=>{
-    let t=document.createElement("div");
-    t.className="tile";
-    t.style.backgroundPosition=`${(i%3)*50}% ${(~~(i/3))*50}%`;
-    t.draggable=true;
-    t.ondragstart=e=>drag=i;
-    t.ondragover=e=>e.preventDefault();
-    t.ondrop=e=>{
-      let a=order.indexOf(drag);
-      let b=order.indexOf(i);
-      [order[a],order[b]]=[order[b],order[a]];
-      initPuzzle();
-      if(order.every((v,i)=>v===i)){
-        setTimeout(()=>screens("puzzle").classList.remove("active")||
-        screens("letter").classList.add("active")||
-        typeText(),600);
-      }
-    }
-    puzzleBox.appendChild(t);
-  })
-}
+        function nextPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            if(id === 'page3') initPuzzle(); // Mulai puzzle saat halaman 3 aktif
+            if(id === 'page4') typeWriter();
+        }
 
-/* TYPEWRITER */
-const msg="Terima kasih sudah hadir dan bertahan bersamaku.\nAku harap kita selalu saling memilih, di setiap hari yang datang 🤍";
-let i=0;
-function typeText(){
-  if(i<msg.length){
-    text.innerHTML+=msg[i]==="\n"?"<br>":msg[i];
-    i++; setTimeout(typeText,45);
-  }
-}
+        function checkCode() {
+            if(document.getElementById('passcode').value === secretCode) {
+                audio.play(); nextPage('page3');
+            } else {
+                alert("Kode Salah!");
+            }
+        }
 
-/* ENDING */
-function ask(){
-  screens("letter").classList.remove("active");
-  screens("end").classList.add("active");
-  for(let i=0;i<80;i++){
-    let c=document.createElement("span");
-    c.style.left=Math.random()*100+"%";
-    c.style.setProperty("--h",Math.random()*360);
-    confetti.appendChild(c);
-  }
-}
+        // --- LOGIKA PUZZLE 3x3 (DRAG & CLICK SWAP) ---
+        function initPuzzle() {
+            puzzleBoard.innerHTML = "";
+            pieces = [];
+            // Buat urutan acak
+            let indices = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+            indices.sort(() => Math.random() - 0.5); // Shuffle
 
-function fadeOut(){
-  let v=music.volume;
-  let f=setInterval(()=>{
-    v-=.05;
-    music.volume=v;
-    if(v<=0){clearInterval(f);music.pause();}
-  },200);
-}
-</script>
+            indices.forEach((index, i) => {
+                const piece = document.createElement('div');
+                piece.classList.add('puzzle-piece');
+                piece.draggable = true;
+                
+                // Hitung posisi background berdasarkan index ASLI (gambar utuh)
+                // Grid 3x3: x bergerak 0%, 50%, 100%. y juga sama.
+                let row = Math.floor(index / 3);
+                let col = index % 3;
+                piece.style.backgroundPosition = `${col * 50}% ${row * 50}%`;
+                piece.dataset.id = index; // Simpan ID asli gambar
+
+                // Event Listeners buat Desktop (Drag)
+                piece.addEventListener('dragstart', dragStart);
+                piece.addEventListener('dragover', dragOver);
+                piece.addEventListener('drop', dragDrop);
+                
+                // Event Listeners buat HP (Click/Tap)
+                piece.addEventListener('click', () => clickSwap(piece));
+
+                puzzleBoard.appendChild(piece);
+                pieces.push(piece);
+            });
+        }
+
+        let dragSrcEl = null;
+
+        function dragStart(e) {
+            dragSrcEl = this;
+            e.dataTransfer.effectAllowed = 'move';
+        }
+
+        function dragOver(e) {
+            if (e.preventDefault) e.preventDefault();
+            return false;
+        }
+
+        function dragDrop(e) {
+            if (dragSrcEl !== this) {
+                swapPieces(dragSrcEl, this);
+            }
+            return false;
+        }
+
+        // Fungsi Klik buat HP (Alternatif Drag)
+        function clickSwap(clickedPiece) {
+            if (!selectedPiece) {
+                selectedPiece = clickedPiece;
+                clickedPiece.classList.add('selected');
+            } else {
+                swapPieces(selectedPiece, clickedPiece);
+                selectedPiece.classList.remove('selected');
+                selectedPiece = null;
+            }
+        }
+
+        function swapPieces(el1, el2) {
+            // Tukar Background Position
+            let tempBg = el1.style.backgroundPosition;
+            el1.style.backgroundPosition = el2.style.backgroundPosition;
+            el2.style.backgroundPosition = tempBg;
+
+            // Tukar Data ID buat cek kemenangan
+            let tempId = el1.dataset.id;
+            el1.dataset.id = el2.dataset.id;
+            el2.dataset.id = tempId;
+
+            checkWin();
+        }
+
+        function checkWin() {
+            let currentOrder = Array.from(puzzleBoard.children).map(p => p.dataset.id);
+            // Cek apakah urutannya [0, 1, 2, 3, 4, 5, 6, 7, 8]
+            let isWin = currentOrder.every((val, index) => val == index);
+
+            if (isWin) {
+                document.getElementById('puzzle-status').innerText = "Yeay! Sempurna! 🎉";
+                triggerConfetti();
+                setTimeout(() => {
+                    alert("Puzzle Berhasil Disusun! Lanjut yuk ❤️");
+                    nextPage('page4');
+                }, 1500);
+            }
+        }
+
+        // --- TYPING EFFECT ---
+        let i = 0;
+        function typeWriter() {
+            const target = document.getElementById("typing-box");
+            if(target.innerHTML === "") {
+                function type() {
+                    if (i < textToType.length) {
+                        target.innerHTML += textToType.charAt(i);
+                        i++;
+                        setTimeout(type, 50);
+                    }
+                }
+                type();
+            }
+        }
+
+        // --- TOMBOL NO & LAINNYA ---
+        function pindahTombol() {
+            const btnNo = document.getElementById("btnNo");
+            btnNo.style.position = "fixed"; 
+            btnNo.style.left = Math.random() * (window.innerWidth - 100) + "px";
+            btnNo.style.top = Math.random() * (window.innerHeight - 100) + "px";
+        }
+
+        function terimaCinta() {
+            triggerConfetti(); triggerConfetti();
+            setTimeout(() => nextPage('page7'), 1000);
+        }
+
+        function pelukAku() {
+            alert("🤗 Peluk Eratt!! 🤗");
+            location.reload();
+        }
+
+        function triggerConfetti() {
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#ff8fa3', '#c9184a', '#fff'] });
+        }
+    </script>
 </body>
 </html>
-
